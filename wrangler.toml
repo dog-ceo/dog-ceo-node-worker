@@ -1,3 +1,8 @@
 name = "dog-ceo-worker"
 main = "src/index.ts"
 compatibility_date = "2023-01-03"
+
+# Todo: try not using AWS SDK
+r2_buckets = [
+  { binding = "BUCKET", bucket_name = "dog-ceo-api-images", preview_bucket_name = "dog-ceo-api-images" }
+]
