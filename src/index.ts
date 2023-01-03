@@ -19,7 +19,22 @@ export interface Env {
 	// MY_BUCKET: R2Bucket;
 }
 
+import { GetObjectsByDelimeterAndPrefix } from "./libraries/aws"
+
 async function handleRequest(request: Request): Promise<Response> {
+	
+
+	const list = await GetObjectsByDelimeterAndPrefix('/', 'breeds/');
+
+	if (list && list.CommonPrefixes) {
+		console.log('contents');
+		for (const element of list.CommonPrefixes) {
+		  if (element && element.Prefix) {
+			console.log(element.Prefix);
+		  }
+		}
+	}
+
     const { protocol, pathname } = new URL(request.url);
 
 	switch (pathname) {
