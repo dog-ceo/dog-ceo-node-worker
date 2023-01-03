@@ -19,12 +19,20 @@ export interface Env {
 	// MY_BUCKET: R2Bucket;
 }
 
-export default {
-	async fetch(
-		request: Request,
-		env: Env,
-		ctx: ExecutionContext
-	): Promise<Response> {
-		return new Response("Hello World!");
-	},
-};
+async function handleRequest(request: Request): Promise<Response> {
+    const { protocol, pathname } = new URL(request.url);
+
+	switch (pathname) {
+		case '/api':
+			return new Response('Api root');
+	
+		case '/api/breeds/list/all':
+			return new Response('Logged out.', { status: 401 });
+	}
+	
+	return new Response('Not Found.', { status: 404 });
+}
+
+addEventListener('fetch', event => {
+    event.respondWith(handleRequest(event.request))
+})
