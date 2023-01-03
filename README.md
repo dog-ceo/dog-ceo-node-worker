@@ -1,2 +1,12 @@
-To start developing your Worker, run `cd dog-ceo-worker && npm start`
-To publish your Worker to the Internet, run `npm run deploy`
+To start developing your Worker, run
+
+```bash
+npm install
+npm start
+```
+
+To publish your Worker to the Internet, run
+
+```bash
+npm run deploy
+```
