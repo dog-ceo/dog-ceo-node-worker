@@ -17,7 +17,6 @@ export function getClient(env: Env) {
     return client;
 }
 
-// GetObjectsByDelimeterAndPrefix gets objects from s3 which start with string
 export async function getObjectsByDelimeterAndPrefix(env: Env, client: S3Client, delimeter: string, prefix: string): Promise<ListObjectsV2CommandOutput> {
 	const input = {
 		Bucket: env.R2_BUCKET,

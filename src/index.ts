@@ -1,3 +1,5 @@
+import { processRoutes } from "./libraries/router"
+
 export interface Env {}
 
 import { 
@@ -8,7 +10,7 @@ import {
 
 export default {
 	async fetch(request: Request, env: Env): Promise<Response> {
-		const { protocol, pathname } = new URL(request.url);
+		const { pathname } = new URL(request.url);
 
 		const routes = {
 			'/api/breeds/list/all': async () => { 
@@ -55,44 +57,6 @@ export default {
 			},
 		};
 
-		let stripped = pathname.replace(/^\/|\/$/g, '');
-
-		for (const [key, value] of Object.entries(routes)) {
-			const strippedKey = key.replace(/^\/|\/$/g, '');
-
-			// Matched without any vars detected
-			if (stripped === strippedKey) {
-				return value();
-			}
-
-			// Process the variables in the urls
-			if (key.includes(':')) {
-				// Split both up by slash
-				const explodedRoute = strippedKey.split('/');
-				const explodedInput = stripped.split('/');
-				const args: string[] = [];
-
-				// Do they have the same number of segments?
-				if (explodedRoute.length === explodedInput.length) {
-					// Loop through them
-					explodedRoute.forEach(function (item, index) {
-						// if it contains a :
-						if (explodedRoute[index].includes(':')) {
-							// remove any weird characters and add it to the args array
-							args.push(explodedInput[index].replace(/[^a-zA-Z0-9]/g, ""));
-						} else {
-							// segment mismatch, skip current route
-							if (explodedRoute[index] !== explodedInput[index]) {
-								return; // means `continue` in js
-							}
-						}
-					});
-
-					return value(...args);
-				}
-			}
-		}
-
-		return new Response('No matching route.', { status: 404 });
+		return processRoutes(pathname, routes);
 	}
 }
