@@ -42,10 +42,16 @@ export default {
 			    return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}});
 			},
 			'/api/breed/:breed1/images/random': async (breed1: string) => { 
-				return new Response('NOT FOUND');
+				const breeds = await getBreedImages(env, breed1, '');
+				const image = breeds[Math.floor(Math.random() * breeds.length)];
+			    const json = JSON.stringify({'status': 'success', 'message': image});
+			    return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}});
 			},
 			'/api/breed/:breed1/:breed2/images/random': async (breed1: string, breed2: string) => { 
-				return new Response('NOT FOUND');
+				const breeds = await getBreedImages(env, breed1, breed2);
+				const image = breeds[Math.floor(Math.random() * breeds.length)];
+			    const json = JSON.stringify({'status': 'success', 'message': image});
+			    return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}});
 			},
 			'/api/breeds/image/random/:count': async (count: number) => { 
 				return new Response('NOT FOUND');
@@ -61,3 +67,9 @@ export default {
 		return processRoutes(pathname, routes);
 	}
 }
+
+function getMultipleRandom(arr, num) {
+	const shuffled = [...arr].sort(() => 0.5 - Math.random());
+  
+	return shuffled.slice(0, num);
+  }
