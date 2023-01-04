@@ -86,12 +86,20 @@ export async function listSubBreeds(env: Env, breed1: string): Promise<Map<strin
     return breeds;
 }
 
-export async function getBreedImages(env: Env, breed1: string): Promise<string[]> {
-    const prefix = "breeds/" + breed1;
+export async function getBreedImages(env: Env, breed1: string, breed2: string): Promise<string[]> {
+    let breed = breed1;
+
+    if (breed2 && breed2.length > 0) {
+        breed = breed + '-' + breed2;
+    }
+
+    const prefix = "breeds/" + breed;
+
+    console.log(prefix);
 
     // todo: check breed exists
 
-    const elements = await getObjectsByPrefix(env, getClient(env), prefix, 'getBreedImages:' + breed1);
+    const elements = await getObjectsByPrefix(env, getClient(env), prefix, 'getBreedImages:' + breed);
 
     return elements;
 }

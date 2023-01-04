@@ -32,12 +32,14 @@ export default {
 			    return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}});
 			},
 			'/api/breed/:breed1/images': async (breed1: string) => {
-				const breeds = await getBreedImages(env, breed1);
+				const breeds = await getBreedImages(env, breed1, '');
 			    const json = JSON.stringify({'status': 'success', 'message': breeds});
 			    return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}});
 			},
 			'/api/breed/:breed1/:breed2/images': async (breed1: string, breed2: string) => { 
-				return new Response('NOT FOUND');
+				const breeds = await getBreedImages(env, breed1, breed2);
+			    const json = JSON.stringify({'status': 'success', 'message': breeds});
+			    return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}});
 			},
 			'/api/breed/:breed1/images/random': async (breed1: string) => { 
 				return new Response('NOT FOUND');
