@@ -1,4 +1,10 @@
-import { S3Client, ListObjectsV2Command, ListObjectsV2CommandOutput } from "@aws-sdk/client-s3";
+import { 
+	S3Client,
+	ListObjectsV2Command, 
+	ListObjectsV2CommandOutput
+} from "@aws-sdk/client-s3";
+
+const cdnPrefix = "https://images.dog.ceo/";
 
 export interface Env {
 	DOGSTUFF: KVNamespace
@@ -81,7 +87,7 @@ export async function getObjectsByPrefix(env: Env, client: S3Client, prefix: str
 	if (listed && listed.Contents) {
 		for (const element of listed.Contents) {
 			if (element && element.Key) {
-				elements.push(element.Key);
+				elements.push(cdnPrefix + element.Key);
 			}
 		}
 
