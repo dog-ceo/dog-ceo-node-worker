@@ -1,13 +1,15 @@
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 
-export function getClient() {
+export interface Env {}
+
+export function getClient(env: Env) {
     const config = {
 		region: "us-east-1",
 		credentials:{
-            accessKeyId: R2_ACCESS_KEY_ID,
-            secretAccessKey: R2_SECRET_ACCESS_KEY
+            accessKeyId: env.R2_ACCESS_KEY_ID,
+            secretAccessKey: env.R2_SECRET_ACCESS_KEY
         },
-		endpoint: R2_API,
+		endpoint: env.R2_API,
 	};
 	
 	const client = new S3Client(config);
@@ -16,9 +18,9 @@ export function getClient() {
 }
 
 // GetObjectsByDelimeterAndPrefix gets objects from s3 which start with string
-export async function getObjectsByDelimeterAndPrefix(client: S3Client, delimeter: string, prefix: string) {
+export async function getObjectsByDelimeterAndPrefix(env: Env, client: S3Client, delimeter: string, prefix: string) {
 	const input = {
-		Bucket: R2_BUCKET,
+		Bucket: env.R2_BUCKET,
 		Delimiter: delimeter,
 		Prefix: prefix,
 	};
