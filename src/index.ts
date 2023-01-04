@@ -1,11 +1,20 @@
 import { Env } from "./libraries/s3"
+
 import { processRoutes } from "./libraries/router"
+
+import {
+	responseString,
+	responseOneDimensional,
+	responseTwoDimensional,
+} from "./libraries/response"
 
 import { 
 	listAllBreeds,
-	listMasterBreeds,
+	listMainBreeds,
 	listSubBreeds,
 	getBreedImages,
+	getBreedImageRandom,
+	getBreedImagesRandom,
 } from "./libraries/breeds"
 
 export default {
@@ -14,44 +23,28 @@ export default {
 
 		const routes = {
 			'/api/breeds/list/all': async () => { 
-				var breeds = await listAllBreeds(env);
-				var json = JSON.stringify({'status': 'success', 'message': Object.fromEntries(breeds)});
-				return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}})
+				return responseTwoDimensional(Object.fromEntries(await listAllBreeds(env)));
 			},
 			'/api/breeds/list': async () => { 
-				var breeds = await listMasterBreeds(env);
-				var json = JSON.stringify({'status': 'success', 'message': Object.fromEntries(breeds)});
-				return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}});
+				return responseTwoDimensional(Object.fromEntries(await listMainBreeds(env)));
 			},
 			'/api/breeds/image/random': async () => {
-				return new Response('NOT FOUND');
+				return responseString(await getBreedImageRandom(env));
 			},
 			'/api/breed/:breed1/list': async(breed1: string) => {
-				const breeds = await listSubBreeds(env, breed1);
-			    const json = JSON.stringify({'status': 'success', 'message': Object.fromEntries(breeds)});
-			    return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}});
+				return responseTwoDimensional(Object.fromEntries(await listSubBreeds(env, breed1)));
 			},
 			'/api/breed/:breed1/images': async (breed1: string) => {
-				const breeds = await getBreedImages(env, breed1, '');
-			    const json = JSON.stringify({'status': 'success', 'message': breeds});
-			    return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}});
+				return responseOneDimensional(await getBreedImages(env, breed1, ''));
 			},
 			'/api/breed/:breed1/:breed2/images': async (breed1: string, breed2: string) => { 
-				const breeds = await getBreedImages(env, breed1, breed2);
-			    const json = JSON.stringify({'status': 'success', 'message': breeds});
-			    return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}});
+				return responseOneDimensional(await getBreedImages(env, breed1, breed2));
 			},
 			'/api/breed/:breed1/images/random': async (breed1: string) => { 
-				const breeds = await getBreedImages(env, breed1, '');
-				const image = breeds[Math.floor(Math.random() * breeds.length)];
-			    const json = JSON.stringify({'status': 'success', 'message': image});
-			    return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}});
+				return responseString(await getBreedImagesRandom(env, breed1, ''));
 			},
 			'/api/breed/:breed1/:breed2/images/random': async (breed1: string, breed2: string) => { 
-				const breeds = await getBreedImages(env, breed1, breed2);
-				const image = breeds[Math.floor(Math.random() * breeds.length)];
-			    const json = JSON.stringify({'status': 'success', 'message': image});
-			    return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}});
+				return responseString(await getBreedImagesRandom(env, breed1, breed2));
 			},
 			'/api/breeds/image/random/:count': async (count: number) => { 
 				return new Response('NOT FOUND');

@@ -34,11 +34,11 @@ export async function listAllBreeds(env: Env): Promise<Map<string, string[]>> {
     return breeds;
 }
 
-export async function listMasterBreeds(env: Env): Promise<Map<string, string[]>> {
+export async function listMainBreeds(env: Env): Promise<Map<string, string[]>> {
     const prefix = "breeds/";
     const delimiter = "/";
 
-    const elements = await getCommonPrefixesByDelimeterAndPrefix(env, getClient(env), delimiter, prefix, 'listMasterBreeds');
+    const elements = await getCommonPrefixesByDelimeterAndPrefix(env, getClient(env), delimiter, prefix, 'listMainBreeds');
 
     const breeds: Map<string, string[]> = new Map;
 
@@ -95,11 +95,34 @@ export async function getBreedImages(env: Env, breed1: string, breed2: string): 
 
     const prefix = "breeds/" + breed;
 
-    console.log(prefix);
-
     // todo: check breed exists
 
     const elements = await getObjectsByPrefix(env, getClient(env), prefix, 'getBreedImages:' + breed);
 
     return elements;
+}
+
+export async function getBreedImagesRandom(env: Env, breed1: string, breed2: string): Promise<string> {
+    const breeds = await getBreedImages(env, breed1, breed2);
+
+    const image = breeds[Math.floor(Math.random() * breeds.length)];
+
+    return image;
+}
+
+export async function getBreedImageRandom(env: Env): Promise<string> {
+    const mainBreeds = await listMainBreeds(env);
+
+    const randomBreed = getRandomKeyFromBreedsMap(mainBreeds);
+
+    const breeds = await getBreedImages(env, randomBreed, '');
+
+    const image = breeds[Math.floor(Math.random() * breeds.length)];
+
+    return image;
+}
+
+function getRandomKeyFromBreedsMap(collection: Map<string, string[]>) {
+    let keys = Array.from(collection.keys());
+    return keys[Math.floor(Math.random() * keys.length)];
 }

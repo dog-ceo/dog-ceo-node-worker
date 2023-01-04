@@ -1,16 +1,14 @@
-export function BreedResponseTwoDimensional(): void {
-	
+export function responseTwoDimensional(data: { [k: string]: string[]; }): Response {
+	const json = JSON.stringify({'status': 'success', 'message': data});
+	return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}})
 }
-/*
-// BreedResponseTwoDimensional returns a json response
-function BreedResponseTwoDimensional(data array[string][]string) events.APIGatewayProxyResponse {
-	successData := map[string]interface{}{
-		"status":  "success",
-		"message": data,
-	}
 
-	resultJSON, _ := json.Marshal(successData)
-
-	return jsonResponse(200, string(resultJSON))
+export function responseOneDimensional(data: string[]): Response  {
+	const json = JSON.stringify({'status': 'success', 'message': data});
+	return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}})
 }
-*/
+
+export function responseString(data: string): Response  {
+	const json = JSON.stringify({'status': 'success', 'message': data});
+	return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}})
+}
