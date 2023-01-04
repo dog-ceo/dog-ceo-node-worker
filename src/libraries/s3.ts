@@ -57,6 +57,40 @@ export async function getCommonPrefixesByDelimeterAndPrefix(env: Env, client: S3
 	return elements;
 }
 
+export async function getObjectsByPrefix(env: Env, client: S3Client, prefix: string, cacheKey: string): Promise<string[]> {
+	const input = {
+		Bucket: env.R2_BUCKET,
+		Prefix: prefix,
+	};
+
+	let elements: string[] = [];
+
+	const json = await getDataFromCache(env, cacheKey);
+
+    if (json.length) {
+		const elements = JSON.parse(json);
+
+		return elements;
+	}
+
+
+	const command = new ListObjectsV2Command(input);
+
+	const listed = await client.send(command);
+
+	if (listed && listed.Contents) {
+		for (const element of listed.Contents) {
+			if (element && element.Key) {
+				elements.push(element.Key);
+			}
+		}
+
+		saveDataToCache(env, cacheKey, JSON.stringify(elements));
+    }
+
+	return elements;
+}
+
 async function getDataFromCache(env: Env, key: string): Promise<string> {
 	const cacheKey = 'dog-' + key;
 	const cacheDataKey = cacheKey + '-data';

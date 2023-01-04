@@ -1,4 +1,9 @@
-import { getClient, getCommonPrefixesByDelimeterAndPrefix, Env } from "./s3"
+import { 
+    getClient,
+    getCommonPrefixesByDelimeterAndPrefix,
+    getObjectsByPrefix,
+    Env
+} from "./s3"
 
 export async function listAllBreeds(env: Env): Promise<Map<string, string[]>> {
     const prefix = "breeds/";
@@ -79,4 +84,12 @@ export async function listSubBreeds(env: Env, breed1: string): Promise<Map<strin
     }
 
     return breeds;
+}
+
+export async function getBreedImages(env: Env, breed1: string): Promise<string[]> {
+    const prefix = "breeds/" + breed1;
+
+    const elements = await getObjectsByPrefix(env, getClient(env), prefix, 'getBreedImages');
+
+    return elements;
 }
