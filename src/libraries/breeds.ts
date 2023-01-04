@@ -1,29 +1,27 @@
-import { getClient, getObjectsByDelimeterAndPrefix } from "./s3"
-
-export interface Env {}
+import { getClient, getCommonPrefixesByDelimeterAndPrefix, Env } from "./s3"
 
 export async function listAllBreeds(env: Env): Promise<Map<string, string[]>> {
     const prefix = "breeds/";
     const delimiter = "/";
 
-    const listed = await getObjectsByDelimeterAndPrefix(env, getClient(env), delimiter, prefix);
+    const elements = await getCommonPrefixesByDelimeterAndPrefix(env, getClient(env), delimiter, prefix, 'listAllBreeds');
 
     const breeds: Map<string, string[]> = new Map;
 
-    if (listed && listed.CommonPrefixes) {
-        for (const element of listed.CommonPrefixes) {
-            const breedString = element.Prefix?.replace(prefix, '').replace(delimiter, '');
-            const exploded = breedString.split("-");
-            const breed = exploded[0];
+    for (const element of elements) {
+        const breedString = element.replace(prefix, '').replace(delimiter, '');
+        const exploded = breedString.split("-");
+        const breed = exploded[0];
 
-            if (!(breed in breeds)) {
-                breeds.set(breed, []);
-            }
+        if (!(breed in breeds)) {
+            breeds.set(breed, []);
+        }
 
-            if (exploded.length > 1) {
-                const secondary = breeds.get(breed);
+        if (exploded.length > 1) {
+            const secondary = breeds.get(breed);
+            if (secondary) {
                 secondary.push(exploded[1]);
-                breeds.set(breed, secondary);
+                        breeds.set(breed, secondary);
             }
         }
     }
@@ -35,19 +33,17 @@ export async function listMasterBreeds(env: Env): Promise<Map<string, string[]>>
     const prefix = "breeds/";
     const delimiter = "/";
 
-    const listed = await getObjectsByDelimeterAndPrefix(env, getClient(env), delimiter, prefix);
+    const elements = await getCommonPrefixesByDelimeterAndPrefix(env, getClient(env), delimiter, prefix, 'listMasterBreeds');
 
     const breeds: Map<string, string[]> = new Map;
 
-    if (listed && listed.CommonPrefixes) {
-        for (const element of listed.CommonPrefixes) {
-            const breedString = element.Prefix?.replace(prefix, '').replace(delimiter, '');
-            const exploded = breedString.split("-");
-            const breed = exploded[0];
+    for (const element of elements) {
+        const breedString = element.replace(prefix, '').replace(delimiter, '');
+        const exploded = breedString.split("-");
+        const breed = exploded[0];
 
-            if (!(breed in breeds)) {
-                breeds.set(breed, []);
-            }
+        if (!(breed in breeds)) {
+            breeds.set(breed, []);
         }
     }
 
@@ -58,23 +54,23 @@ export async function listSubBreeds(env: Env, breed1: string): Promise<Map<strin
     const prefix = "breeds/";
     const delimiter = "/";
 
-    const listed = await getObjectsByDelimeterAndPrefix(env, getClient(env), delimiter, prefix);
+    const elements = await getCommonPrefixesByDelimeterAndPrefix(env, getClient(env), delimiter, prefix, 'listSubBreeds');
 
     const breeds: Map<string, string[]> = new Map;
 
-    if (listed && listed.CommonPrefixes) {
-        for (const element of listed.CommonPrefixes) {
-            const breedString = element.Prefix?.replace(prefix, '').replace(delimiter, '');
-            const exploded = breedString.split("-");
-            const breed = exploded[0];
+    for (const element of elements) {
+        const breedString = element.replace(prefix, '').replace(delimiter, '');
+        const exploded = breedString.split("-");
+        const breed = exploded[0];
 
-            if (breed1 === breed) {
-                if (!(breed in breeds)) {
-                    breeds.set(breed, []);
-                }
+        if (breed1 === breed) {
+            if (!(breed in breeds)) {
+                breeds.set(breed, []);
+            }
 
-                if (exploded.length > 1) {
-                    const secondary = breeds.get(breed);
+            if (exploded.length > 1) {
+                const secondary = breeds.get(breed);
+                if (secondary) {
                     secondary.push(exploded[1]);
                     breeds.set(breed, secondary);
                 }

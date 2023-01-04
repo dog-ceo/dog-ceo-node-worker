@@ -1,6 +1,5 @@
+import { Env } from "./libraries/s3"
 import { processRoutes } from "./libraries/router"
-
-export interface Env {}
 
 import { 
 	listAllBreeds,
@@ -23,7 +22,8 @@ export default {
 				var json = JSON.stringify({'status': 'success', 'message': Object.fromEntries(breeds)});
 				return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}});
 			},
-			'/breeds/image/random': async () => { 
+			'/breeds/image/random': async () => {
+				
 				return new Response('NOT FOUND');
 			},
 			'/api/breed/:breed1/list': async(breed1: string) => {

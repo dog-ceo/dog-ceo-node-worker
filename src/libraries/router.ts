@@ -1,4 +1,4 @@
-export async function processRoutes(pathname: string, routes: any) {
+export async function processRoutes(pathname: string, routes: Function) {
     let stripped = pathname.replace(/^\/|\/$/g, '');
 
 	for (const [key, value] of Object.entries(routes)) {

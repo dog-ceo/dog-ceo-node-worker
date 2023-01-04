@@ -1,4 +1,4 @@
-function BreedResponseTwoDimensional() {
+export function BreedResponseTwoDimensional(): void {
 	
 }
 /*
