@@ -3,7 +3,7 @@ import {
     getCommonPrefixesByDelimeterAndPrefix,
     getObjectsByPrefix,
     Env
-} from "./s3"
+} from "./data"
 
 export async function listAllBreeds(env: Env): Promise<Map<string, string[]>> {
     const prefix = "breeds/";
@@ -115,11 +115,30 @@ export async function getBreedImageRandom(env: Env): Promise<string> {
 
     const randomBreed = getRandomKeyFromBreedsMap(mainBreeds);
 
-    const breeds = await getBreedImages(env, randomBreed, '');
+    const images = await getBreedImages(env, randomBreed, '');
 
-    const image = breeds[Math.floor(Math.random() * breeds.length)];
+    const image = images[Math.floor(Math.random() * images.length)];
 
     return image;
+}
+
+export async function getBreedImageRandomCount(env: Env, count: number): Promise<string[]> {
+    if (count > 50) {
+        count = 50;
+    }
+
+    const mainBreeds = await listMainBreeds(env);
+
+    const images: string[] = [];
+
+    for (let i = 0; i < count; i++) {
+        const randomBreed = getRandomKeyFromBreedsMap(mainBreeds);
+        const breedImages = await getBreedImages(env, randomBreed, '');
+        const image = breedImages[Math.floor(Math.random() * breedImages.length)];
+        images.push(image);
+    }
+
+    return images;
 }
 
 function getRandomKeyFromBreedsMap(collection: Map<string, string[]>) {

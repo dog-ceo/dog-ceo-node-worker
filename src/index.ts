@@ -1,4 +1,4 @@
-import { Env } from "./libraries/s3"
+import { Env } from "./libraries/data"
 
 import { processRoutes } from "./libraries/router"
 
@@ -15,6 +15,7 @@ import {
 	getBreedImages,
 	getBreedImageRandom,
 	getBreedImagesRandom,
+	getBreedImageRandomCount,
 } from "./libraries/breeds"
 
 export default {
@@ -47,7 +48,7 @@ export default {
 				return responseString(await getBreedImagesRandom(env, breed1, breed2));
 			},
 			'/api/breeds/image/random/:count': async (count: number) => { 
-				return new Response('NOT FOUND');
+				return responseOneDimensional(await getBreedImageRandomCount(env, count));
 			},
 			'/api/breed/:breed1': async (breed1: string) => { 
 				return new Response('NOT FOUND');
@@ -60,9 +61,3 @@ export default {
 		return processRoutes(pathname, routes);
 	}
 }
-
-function getMultipleRandom(arr, num) {
-	const shuffled = [...arr].sort(() => 0.5 - Math.random());
-  
-	return shuffled.slice(0, num);
-  }
