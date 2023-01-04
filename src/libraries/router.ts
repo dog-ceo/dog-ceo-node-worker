@@ -7,25 +7,35 @@ export async function processRoutes(pathname: string, routes: Function) {
 		// Split both up by slash
 		const explodedRoute = strippedKey.split('/');
 		const explodedInput = stripped.split('/');
-		const args: string[] = [];
+
+		let segmentsMatch = false;
 
 		// Do they have the same number of segments?
 		if (explodedRoute.length === explodedInput.length) {
-			// Loop through them
+			// Loop through the segments sent to us
 			explodedRoute.forEach(function (item, index) {
-				// if it contains a :
-				if (explodedRoute[index].includes(':')) {
-					// remove any weird characters and add it to the args array
-					args.push(explodedInput[index].replace(/[^a-zA-Z0-9]/g, ''));
-				} else {
-					// segment mismatch, skip current route
-					if (explodedRoute[index] !== explodedInput[index]) {
-						return; // means `continue` in js
-					}
+				// Check that this is not a dotted segment
+				if (!explodedRoute[index].includes(':')) {
+					// Do all the non dotted segments match?
+					segmentsMatch = (explodedRoute[index] == explodedInput[index])
 				}
 			});
 
-			return value(...args);
+			// All the non dotted segments matched
+			if (segmentsMatch) {
+				const potentialArgs: string[] = [];
+
+				// Loop through the segments sent to us again
+				explodedRoute.forEach(function (item, index) {
+					// If its matching segment contains a :
+					if (explodedRoute[index].includes(':')) {
+						// Remove any bad characters and store as potential argument
+						potentialArgs.push(explodedInput[index].replace(/[^a-zA-Z0-9]/g, ''));
+					}
+				});
+
+				return value(...potentialArgs);
+			}
 		}
 	}
 
