@@ -56,6 +56,19 @@ export default {
 			'/api/breed/:breed1/:breed2': async (breed1: string, breed2: string) => { 
 				return new Response('NOT FOUND');
 			},
+			// /breeds/list/all/random
+			// /breeds/list/all/random/10
+			// /breeds/list/random
+			// /breeds/list/random/10
+			// /breed/{breed}/list/random
+			// /breed/{breed}/list/random/10
+			// /breed/{breed}
+			// /breed/{breed}/breed2
+			// /api/breed/:breed1/images/random/:count
+			// /breed/{breed}/{breed2}/images/random
+			// /breed/{breed}/{breed2}/images/random/count
+			// https://dog.ceo/api/breeds/image/random/9/alt
+			// application/xml
 		};
 
 		return processRoutes(pathname, routes);
