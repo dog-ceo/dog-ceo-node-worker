@@ -59,7 +59,7 @@ export async function listSubBreeds(env: Env, breed1: string): Promise<Map<strin
     const prefix = "breeds/";
     const delimiter = "/";
 
-    const elements = await getCommonPrefixesByDelimeterAndPrefix(env, getClient(env), delimiter, prefix, 'listSubBreeds');
+    const elements = await getCommonPrefixesByDelimeterAndPrefix(env, getClient(env), delimiter, prefix, 'listSubBreeds:' + breed1);
 
     const breeds: Map<string, string[]> = new Map;
 
@@ -89,7 +89,9 @@ export async function listSubBreeds(env: Env, breed1: string): Promise<Map<strin
 export async function getBreedImages(env: Env, breed1: string): Promise<string[]> {
     const prefix = "breeds/" + breed1;
 
-    const elements = await getObjectsByPrefix(env, getClient(env), prefix, 'getBreedImages');
+    // todo: check breed exists
+
+    const elements = await getObjectsByPrefix(env, getClient(env), prefix, 'getBreedImages:' + breed1);
 
     return elements;
 }
