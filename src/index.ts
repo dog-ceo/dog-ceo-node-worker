@@ -69,6 +69,8 @@ export default {
 			// /breed/{breed}/{breed2}/images/random/count
 			// https://dog.ceo/api/breeds/image/random/9/alt
 			// application/xml
+			// 'Access-Control-Allow-Origin', '*'
+			// 'Cache-Control', 's-maxage=21600, max-age=1800'
 		};
 
 		return processRoutes(pathname, routes);
