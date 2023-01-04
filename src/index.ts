@@ -22,23 +22,37 @@ export default {
 				return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}});
 			},
 			'/breeds/image/random': async () => { 
-				return new Response('LOL');
+				return new Response('NOT FOUND');
 			},
-			'/api/breed/:breed/list': async(breedFromUrl: string) => {
-				const breeds = await listSubBreeds(env, breedFromUrl);
+			'/api/breed/:breed1/list': async(breed1: string) => {
+				const breeds = await listSubBreeds(env, breed1);
 			    const json = JSON.stringify({'status': 'success', 'message': Object.fromEntries(breeds)});
 			    return new Response(json, {headers: {'content-type': 'application/json;charset=UTF-8'}});
-			}
-			/**
-			/breed/{breed1}/list
-			/breed/{breed1}/images
-			/breed/{breed1}/{breed2}/images
-			/breed/{breed1}/images/random
-			/breed/{breed1}/{breed2}/images/random
-			/breeds/image/random/{count}
-			/breed/{breed1}
-			/breed/{breed1}/{breed2}
-			*/
+			},
+			'/breed/:breed1/list': async (breed1: string) => { 
+				return new Response('NOT FOUND');
+			},
+			'/breed/:breed1/images': async (breed1: string) => { 
+				return new Response('NOT FOUND');
+			},
+			'/breed/:breed1/:breed2/images': async (breed1: string, breed2: string) => { 
+				return new Response('NOT FOUND');
+			},
+			'/breed/:breed1/images/random': async (breed1: string) => { 
+				return new Response('NOT FOUND');
+			},
+			'/breed/:breed1/:breed2/images/random': async (breed1: string, breed2: string) => { 
+				return new Response('NOT FOUND');
+			},
+			'/breeds/image/random/:count': async (count: number) => { 
+				return new Response('NOT FOUND');
+			},
+			'/breed/:breed1': async (breed1: string) => { 
+				return new Response('NOT FOUND');
+			},
+			'/breed/:breed1/:breed2': async (breed1: string, breed2: string) => { 
+				return new Response('NOT FOUND');
+			},
 		};
 
 		let stripped = pathname.replace(/^\/|\/$/g, '');
@@ -79,6 +93,6 @@ export default {
 			}
 		}
 
-		return new Response('NO ROUTE MATEHCED', { status: 404 });
+		return new Response('No matching route.', { status: 404 });
 	}
 }

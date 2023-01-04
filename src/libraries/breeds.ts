@@ -54,7 +54,7 @@ export async function listMasterBreeds(env: Env): Promise<Map<string, string[]>>
     return breeds;
 }
 
-export async function listSubBreeds(env: Env, breedFromUrl: string): Promise<Map<string, string[]>> {
+export async function listSubBreeds(env: Env, breed1: string): Promise<Map<string, string[]>> {
     const prefix = "breeds/";
     const delimiter = "/";
 
@@ -68,7 +68,7 @@ export async function listSubBreeds(env: Env, breedFromUrl: string): Promise<Map
             const exploded = breedString.split("-");
             const breed = exploded[0];
 
-            if (breedFromUrl === breed) {
+            if (breed1 === breed) {
                 if (!(breed in breeds)) {
                     breeds.set(breed, []);
                 }
