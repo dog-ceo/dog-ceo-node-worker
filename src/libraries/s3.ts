@@ -1,4 +1,4 @@
-import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
+import { S3Client, ListObjectsV2Command, ListObjectsV2CommandOutput } from "@aws-sdk/client-s3";
 
 export interface Env {}
 
@@ -18,7 +18,7 @@ export function getClient(env: Env) {
 }
 
 // GetObjectsByDelimeterAndPrefix gets objects from s3 which start with string
-export async function getObjectsByDelimeterAndPrefix(env: Env, client: S3Client, delimeter: string, prefix: string) {
+export async function getObjectsByDelimeterAndPrefix(env: Env, client: S3Client, delimeter: string, prefix: string): Promise<ListObjectsV2CommandOutput> {
 	const input = {
 		Bucket: env.R2_BUCKET,
 		Delimiter: delimeter,
