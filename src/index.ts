@@ -16,7 +16,7 @@ import {
 	getBreedImageRandom,
 	getBreedImagesRandom,
 	getBreedImageRandomCount,
-	listSingleRandomBreedWithSub,
+	listRandomBreedsWithSub,
 } from "./libraries/breeds"
 
 export default {
@@ -28,7 +28,10 @@ export default {
 				return responseTwoDimensional(Object.fromEntries(await listAllBreeds(env)));
 			},
 			'/api/breeds/list/all/random': async () => { 
-				return responseTwoDimensional(Object.fromEntries(await listSingleRandomBreedWithSub(env)));
+				return responseTwoDimensional(Object.fromEntries(await listRandomBreedsWithSub(env, 1)));
+			},
+			'/api/breeds/list/all/random/:count': async (count: string) => { 
+				return responseTwoDimensional(Object.fromEntries(await listRandomBreedsWithSub(env, count)));
 			},
 			'/api/breeds/list': async () => { 
 				return responseTwoDimensional(Object.fromEntries(await listMainBreeds(env)));
@@ -61,8 +64,6 @@ export default {
 			'/api/breed/:breed1/:breed2': async (breed1: string, breed2: string) => { 
 				return new Response('NOT FOUND');
 			},
-			// /breeds/list/all/random
-			// /breeds/list/all/random/10
 			// /breeds/list/random
 			// /breeds/list/random/10
 			// /breed/{breed}/list/random

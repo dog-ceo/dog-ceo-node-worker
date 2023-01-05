@@ -34,20 +34,25 @@ export async function listAllBreeds(env: Env): Promise<Map<string, string[]>> {
     return breeds;
 }
 
-export async function listSingleRandomBreedWithSub(env: Env) {
-    const breeds = await listAllBreeds(env);
-    const key = getRandomKeyFromBreedsMap(breeds);
+export async function listRandomBreedsWithSub(env: Env, count: number) {
+    let breeds = await listAllBreeds(env);
+    const result: Map<string, string[]> = new Map;
 
-    let value = breeds.get(key);
+    if (count === 1) {
+        const key = getRandomKeyFromBreedsMap(breeds);
 
-    if (!value) {
-        value = [];
+        let value = breeds.get(key);
+
+        if (!value) {
+            value = [];
+        }
+
+        result.set(key, value);
+
+        return result;
     }
 
-    const result: Map<string, string[]> = new Map;
-    result.set(key, value);
-
-    return result;
+    return shuffleBreedsMap(breeds, count);
 }
 
 export async function listMainBreeds(env: Env): Promise<Map<string, string[]>> {
@@ -161,3 +166,44 @@ export function getRandomKeyFromBreedsMap(collection: Map<string, string[]>) {
     let keys = Array.from(collection.keys());
     return keys[Math.floor(Math.random() * keys.length)];
 }
+
+export function shuffleBreedsMap(breeds: Map<string, string[]>, count = 0): Map<string, string[]> {
+    let keys = shuffle(Array.from(breeds.keys()));
+
+    if (count > 0 && count <= keys.length) {
+        keys = keys.slice(0, count)
+    }
+
+    const result: Map<string, string[]> = new Map;
+
+    keys.forEach(function (item: string, index: number) {
+        let value = breeds.get(item);
+
+        if (!value) {
+            value = [];
+        }
+
+        result.set(item, value)
+    });
+
+    return result;
+}
+
+// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+function shuffle(array) {
+    let currentIndex = array.length,  randomIndex;
+  
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+  
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+  
+    return array;
+  }
