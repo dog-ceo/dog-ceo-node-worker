@@ -3,6 +3,9 @@
 This current version is using cloudflare workers. [The old PHP version can be found here](https://github.com/ElliottLandsborough/dog-ceo-api).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Maintainability](https://api.codeclimate.com/v1/badges/350767ac49221209a1e3/maintainability)](https://codeclimate.com/github/dog-ceo/dog-ceo-node-worker/maintainability)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=dog-ceo_dog-ceo-node-worker&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=dog-ceo_dog-ceo-node-worker)
+todo: codecov
 
 ## Info
 
