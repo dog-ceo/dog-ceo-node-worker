@@ -8,7 +8,8 @@ import {
 	responseTwoDimensional,
 } from "./libraries/response"
 
-import { 
+import {
+	Params,
 	listAllBreeds,
 	listMainBreeds,
 	listSubBreeds,
@@ -18,6 +19,7 @@ import {
 	getBreedImageRandomCount,
 	listRandomMainBreeds,
 	listRandomBreedsWithSub,
+	listRandomSubBreeds,
 } from "./libraries/breeds"
 
 export default {
@@ -29,52 +31,59 @@ export default {
 				return responseTwoDimensional(Object.fromEntries(await listAllBreeds(env)));
 			},
 			'/api/breeds/list/all/random': async () => {
-				return responseTwoDimensional(Object.fromEntries(await listRandomBreedsWithSub(env, 1)));
+				const params = {count: 1} as Params;
+				return responseTwoDimensional(Object.fromEntries(await listRandomBreedsWithSub(env, params)));
 			},
-			'/api/breeds/list/all/random/:count': async (count: number) => {
-				return responseTwoDimensional(Object.fromEntries(await listRandomBreedsWithSub(env, count)));
+			'/api/breeds/list/all/random/:count': async (params: Params) => {
+				return responseTwoDimensional(Object.fromEntries(await listRandomBreedsWithSub(env, params)));
 			},
 			'/api/breeds/list': async () => {
 				const breeds = await listMainBreeds(env);
 				return responseOneDimensional(Array.from(breeds.keys()));
 			},
 			'/api/breeds/list/random': async () => {
-				const breeds = await listRandomMainBreeds(env, 1);
+				const params = {count: 1} as Params;
+				const breeds = await listRandomMainBreeds(env, params);
 				return responseString(Array.from(breeds.keys())[0]);
 			},
-			'/api/breeds/list/random/:count': async (count: number) => {
-				const breeds = await listRandomMainBreeds(env, count);
+			'/api/breeds/list/random/:count': async (params: Params) => {
+				const breeds = await listRandomMainBreeds(env, params);
 				return responseOneDimensional(Array.from(breeds.keys()));
 			},
 			'/api/breeds/image/random': async () => {
 				return responseString(await getBreedImageRandom(env));
 			},
-			'/api/breed/:breed1/list': async(breed1: string) => {
-				return responseTwoDimensional(Object.fromEntries(await listSubBreeds(env, breed1)));
+			'/api/breed/:breed1/list': async(params: Params) => {
+				return responseTwoDimensional(Object.fromEntries(await listSubBreeds(env, params)));
 			},
-			'/api/breed/:breed1/images': async (breed1: string) => {
-				return responseOneDimensional(await getBreedImages(env, breed1, ''));
+			'/api/breed/:breed1/list/random': async(params: Params) => {
+				const breeds = await listRandomSubBreeds(env, params);
+				return responseString(breeds[0]);
 			},
-			'/api/breed/:breed1/:breed2/images': async (breed1: string, breed2: string) => {
-				return responseOneDimensional(await getBreedImages(env, breed1, breed2));
+			'/api/breed/:breed1/list/random/:count': async(params: Params) => {
+				return responseOneDimensional(await listRandomSubBreeds(env, params));
 			},
-			'/api/breed/:breed1/images/random': async (breed1: string) => {
-				return responseString(await getBreedImagesRandom(env, breed1, ''));
+			'/api/breed/:breed1/images': async (params: Params) => {
+				return responseOneDimensional(await getBreedImages(env, params));
 			},
-			'/api/breed/:breed1/:breed2/images/random': async (breed1: string, breed2: string) => {
-				return responseString(await getBreedImagesRandom(env, breed1, breed2));
+			'/api/breed/:breed1/:breed2/images': async (params: Params) => {
+				return responseOneDimensional(await getBreedImages(env, params));
 			},
-			'/api/breeds/image/random/:count': async (count: number) => {
-				return responseOneDimensional(await getBreedImageRandomCount(env, count));
+			'/api/breed/:breed1/images/random': async (params: Params) => {
+				return responseString(await getBreedImagesRandom(env, params));
 			},
-			'/api/breed/:breed1': async (breed1: string) => {
+			'/api/breed/:breed1/:breed2/images/random': async (params: Params) => {
+				return responseString(await getBreedImagesRandom(env, params));
+			},
+			'/api/breeds/image/random/:count': async (params: Params) => {
+				return responseOneDimensional(await getBreedImageRandomCount(env, params));
+			},
+			'/api/breed/:breed1': async (params: Params) => {
 				return new Response('NOT FOUND');
 			},
-			'/api/breed/:breed1/:breed2': async (breed1: string, breed2: string) => {
+			'/api/breed/:breed1/:breed2': async (params: Params) => {
 				return new Response('NOT FOUND');
 			},
-			// /breed/{breed}/list/random
-			// /breed/{breed}/list/random/10
 			// /breed/{breed}
 			// /breed/{breed}/breed2
 			// /api/breed/:breed1/images/random/:count

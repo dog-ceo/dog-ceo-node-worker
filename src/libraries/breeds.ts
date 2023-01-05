@@ -5,6 +5,12 @@ import {
     getObjectsByPrefix,
 } from "./data"
 
+export interface Params {
+	breed1: string,
+	breed2: string,
+	count: number,
+}
+
 export async function listAllBreeds(env: Env): Promise<Map<string, string[]>> {
     const prefix = "breeds/";
     const delimiter = "/";
@@ -34,7 +40,8 @@ export async function listAllBreeds(env: Env): Promise<Map<string, string[]>> {
     return breeds;
 }
 
-export async function listRandomBreedsWithSub(env: Env, count: number) {
+export async function listRandomBreedsWithSub(env: Env, params: Params) {
+    const {count} = params;
     let breeds = await listAllBreeds(env);
     const result: Map<string, string[]> = new Map;
 
@@ -76,7 +83,8 @@ export async function listMainBreeds(env: Env): Promise<Map<string, string[]>> {
     return breeds;
 }
 
-export async function listRandomMainBreeds(env: Env, count: number) {
+export async function listRandomMainBreeds(env: Env, params: Params) {
+    const {count} = params;
     let breeds = await listMainBreeds(env);
     const result: Map<string, string[]> = new Map;
 
@@ -97,7 +105,8 @@ export async function listRandomMainBreeds(env: Env, count: number) {
     return shuffleBreedsMap(breeds, count);
 }
 
-export async function listSubBreeds(env: Env, breed1: string): Promise<Map<string, string[]>> {
+export async function listSubBreeds(env: Env, params: Params): Promise<Map<string, string[]>> {
+    const {breed1} = params;
     const prefix = "breeds/";
     const delimiter = "/";
 
@@ -113,8 +122,6 @@ export async function listSubBreeds(env: Env, breed1: string): Promise<Map<strin
         const breed = exploded[0];
 
         if (breed1 === breed) {
-            console.log(breed);
-            console.log(exploded[1]);
             if (!(breed in breeds)) {
                 breeds.set(breed, []);
             }
@@ -129,7 +136,29 @@ export async function listSubBreeds(env: Env, breed1: string): Promise<Map<strin
     return breeds;
 }
 
-export async function getBreedImages(env: Env, breed1: string, breed2: string): Promise<string[]> {
+export async function listRandomSubBreeds(env: Env, params: Params) {
+    let {count} = params;
+    const breeds = await listSubBreeds(env, params);
+    const key = getRandomKeyFromBreedsMap(breeds);
+    let subs = breeds.get(key);
+    let result: Array<string> = [];
+
+    if (!subs) {
+        return result;
+    }
+
+    subs = shuffle(subs);
+
+    if (count > subs.length) {
+        count = subs.length;
+    }
+
+    return subs.slice(0, count); 
+}
+
+export async function getBreedImages(env: Env, params: Params): Promise<string[]> {
+    const {breed1, breed2, count} = params;
+
     let breed = breed1;
 
     if (breed2 && breed2.length > 0) {
@@ -145,8 +174,8 @@ export async function getBreedImages(env: Env, breed1: string, breed2: string): 
     return elements;
 }
 
-export async function getBreedImagesRandom(env: Env, breed1: string, breed2: string): Promise<string> {
-    const breeds = await getBreedImages(env, breed1, breed2);
+export async function getBreedImagesRandom(env: Env, params: Params): Promise<string> {
+    const breeds = await getBreedImages(env, params);
 
     const image = breeds[Math.floor(Math.random() * breeds.length)];
 
@@ -158,14 +187,18 @@ export async function getBreedImageRandom(env: Env): Promise<string> {
 
     const randomBreed = getRandomKeyFromBreedsMap(mainBreeds);
 
-    const images = await getBreedImages(env, randomBreed, '');
+    const params = {breed1: randomBreed, breed2: ''} as Params;
+
+    const images = await getBreedImages(env, params);
 
     const image = images[Math.floor(Math.random() * images.length)];
 
     return image;
 }
 
-export async function getBreedImageRandomCount(env: Env, count: number): Promise<string[]> {
+export async function getBreedImageRandomCount(env: Env, params: Params): Promise<string[]> {
+    let {count} = params;
+
     if (count > 50) {
         count = 50;
     }
@@ -176,7 +209,7 @@ export async function getBreedImageRandomCount(env: Env, count: number): Promise
 
     for (let i = 0; i < count; i++) {
         const randomBreed = getRandomKeyFromBreedsMap(mainBreeds);
-        const breedImages = await getBreedImages(env, randomBreed, '');
+        const breedImages = await getBreedImages(env, params);
         const image = breedImages[Math.floor(Math.random() * breedImages.length)];
         images.push(image);
     }
@@ -193,7 +226,7 @@ export function shuffleBreedsMap(breeds: Map<string, string[]>, count = 0): Map<
     let keys = shuffle(Array.from(breeds.keys()));
 
     if (count > 0 && count <= keys.length) {
-        keys = keys.slice(0, count)
+        keys = keys.slice(0, count);
     }
 
     const result: Map<string, string[]> = new Map;

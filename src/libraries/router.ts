@@ -1,3 +1,4 @@
+import { Params } from "./breeds"
 import { notFound } from "./response"
 
 const Router = require('@medley/router');
@@ -17,9 +18,8 @@ export async function processRoutes(pathname: string, routes: Function) {
 
 	if (match !== null) {
 		const handler = match.store['GET'];
-		const params = match.params;
-		const values = Object.values(params);
-		return handler(...values);
+		const params = match.params as Params;
+		return handler(params);
 	}
 
 	return notFound();
