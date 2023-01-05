@@ -13,8 +13,9 @@ export interface Params {
 	count: number,
 }
 
+const prefix = "breeds/";
+
 export async function listAllBreeds(env: Env): Promise<Map<string, string[]>> {
-    const prefix = "breeds/";
     const delimiter = "/";
 
     const elements = await getCommonPrefixesByDelimeterAndPrefix(env, getClient(env), delimiter, prefix, 'listAllBreeds');
@@ -65,7 +66,6 @@ export async function listRandomBreedsWithSub(env: Env, params: Params): Promise
 }
 
 export async function listMainBreeds(env: Env): Promise<Map<string, string[]>> {
-    const prefix = "breeds/";
     const delimiter = "/";
 
     const elements = await getCommonPrefixesByDelimeterAndPrefix(env, getClient(env), delimiter, prefix, 'listMainBreeds');
@@ -159,6 +159,16 @@ export async function listRandomSubBreeds(env: Env, params: Params): Promise<Arr
 }
 
 export async function getBreedImages(env: Env, params: Params): Promise<string[]> {
+    if (await breedExists(env, params)) {
+        const breed = extractBreedStringFromParams(params);
+
+        return await getObjectsByPrefix(env, getClient(env), prefix + breed, 'getBreedImages:' + breed);
+    }
+
+    return [];
+}
+
+function extractBreedStringFromParams(params: Params): string {
     const {breed1, breed2} = params;
 
     let breed = breed1;
@@ -167,13 +177,29 @@ export async function getBreedImages(env: Env, params: Params): Promise<string[]
         breed = breed + '-' + breed2;
     }
 
-    const prefix = "breeds/" + breed;
+    return breed;
+}
 
-    // todo: check breed exists
+async function breedExists(env: Env, params: Params): Promise<boolean> {
+    // Gets a list of all breeds, usually from cache
+    const breeds = await listMainBreeds(env);
+    const breed = extractBreedStringFromParams(params);
 
-    const elements = await getObjectsByPrefix(env, getClient(env), prefix, 'getBreedImages:' + breed);
+    let match = false;
 
-    return elements;
+    Array.from(breeds.keys()).every(item => {
+        // Remove prefix and then slashes from beginning and end
+        item = item.replace(prefix, '').replace(/^\/|\/$/g, '');
+
+        if (item === breed) {
+            match = true;
+            return false; // break
+        }
+
+        return true; // continue
+    });
+
+    return match;
 }
 
 export async function getBreedImagesRandom(env: Env, params: Params): Promise<string[]> {
@@ -317,7 +343,7 @@ export function shuffleBreedsMap(breeds: Map<string, string[]>, count = 0): Map<
 
     const result: Map<string, string[]> = new Map;
 
-    keys.forEach(function (item: string, index: number) {
+    keys.forEach(function (item: string) {
         let value = breeds.get(item);
 
         if (!value) {
