@@ -11,6 +11,11 @@ export interface Params {
 	count: number,
 }
 
+export interface Alt {
+	url: string,
+	altText: string,
+}
+
 export async function listAllBreeds(env: Env): Promise<Map<string, string[]>> {
     const prefix = "breeds/";
     const delimiter = "/";
@@ -219,12 +224,65 @@ export async function getBreedImageRandomCount(env: Env, params: Params): Promis
 
     for (let i = 0; i < count; i++) {
         const randomBreed = getRandomKeyFromBreedsMap(mainBreeds);
+        params.breed1 = randomBreed;
         const breedImages = await getBreedImages(env, params);
         const image = breedImages[Math.floor(Math.random() * breedImages.length)];
         images.push(image);
     }
 
     return images;
+}
+
+export async function getBreedImageRandomCountAlt(env: Env, params: Params): Promise<Array<Alt>> {
+    let {count} = params;
+
+    if (count > 50) {
+        count = 50;
+    }
+
+    const mainBreeds = await listAllBreeds(env);
+
+    const images = [] as Array<Alt>
+
+    for (let i = 0; i < count; i++) {
+        const breed1 = getRandomKeyFromBreedsMap(mainBreeds)
+        params.breed1 = breed1;
+
+        const subs = mainBreeds.get(breed1);
+        const breed2 = (subs && subs.length === 1) ? subs[0] : '';
+        params.breed2 = breed2;
+
+        const breedImages = await getBreedImages(env, params);
+        const image = breedImages[Math.floor(Math.random() * breedImages.length)];
+        const alt = {url: image, altText: niceBreedNameFromParams(params)} as Alt;
+        images.push(alt);
+    }
+
+    return images;
+}
+
+function niceBreedNameFromParams(params: Params): string {
+    let output = '';
+
+    if (params.breed2 && params.breed2.length > 0) {
+        output += params.breed2;
+    }
+
+    if (params.breed1 && params.breed1.length > 0) {
+
+        if (output.length) {
+            output += ' ';
+        }
+
+        output += params.breed1;
+        output += ' dog.';
+    }
+
+    if (output.length) {
+        return capitalizeFirstLetter(output);
+    }
+
+    return 'Unknown breed of dog.'
 }
 
 export function getRandomKeyFromBreedsMap(collection: Map<string, string[]>) {
@@ -271,4 +329,8 @@ function shuffle(array: Array<string>): Array<string> {
     }
   
     return array;
-  }
+}
+
+function capitalizeFirstLetter(string: string): string {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}

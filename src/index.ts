@@ -6,6 +6,7 @@ import {
 	responseString,
 	responseOneDimensional,
 	responseTwoDimensional,
+	responseTwoDimensionalWithAlt,
 } from "./libraries/response"
 
 import {
@@ -17,6 +18,7 @@ import {
 	getBreedImageRandom,
 	getBreedImagesRandom,
 	getBreedImageRandomCount,
+	getBreedImageRandomCountAlt,
 	listRandomMainBreeds,
 	listRandomBreedsWithSub,
 	listRandomSubBreeds,
@@ -50,9 +52,6 @@ export default {
 				const breeds = await listRandomMainBreeds(env, params);
 				return responseOneDimensional(Array.from(breeds.keys()));
 			},
-			'/api/breeds/image/random': async () => {
-				return responseString(await getBreedImageRandom(env));
-			},
 			'/api/breed/:breed1/list': async(params: Params) => {
 				return responseTwoDimensional(Object.fromEntries(await listSubBreeds(env, params)));
 			},
@@ -62,6 +61,15 @@ export default {
 			},
 			'/api/breed/:breed1/list/random/:count': async(params: Params) => {
 				return responseOneDimensional(await listRandomSubBreeds(env, params));
+			},
+			'/api/breeds/image/random': async () => {
+				return responseString(await getBreedImageRandom(env));
+			},
+			'/api/breeds/image/random/:count': async (params: Params) => {
+				return responseOneDimensional(await getBreedImageRandomCount(env, params));
+			},
+			'/api/breeds/image/random/:count/alt': async (params: Params) => {
+				return responseTwoDimensionalWithAlt(await getBreedImageRandomCountAlt(env, params));
 			},
 			'/api/breed/:breed1/images': async (params: Params) => {
 				return responseOneDimensional(await getBreedImages(env, params));
@@ -84,18 +92,14 @@ export default {
 				const images = await getBreedImagesRandom(env, params);
 				return responseOneDimensional(images);
 			},
-			'/api/breeds/image/random/:count': async (params: Params) => {
-				return responseOneDimensional(await getBreedImageRandomCount(env, params));
-			},
+
+			// todo
 			'/api/breed/:breed1': async (params: Params) => {
 				return new Response('NOT FOUND');
 			},
 			'/api/breed/:breed1/:breed2': async (params: Params) => {
 				return new Response('NOT FOUND');
 			},
-			// /breed/{breed}
-			// /breed/{breed}/breed2
-			// https://dog.ceo/api/breeds/image/random/9/alt
 			// application/xml
 		};
 

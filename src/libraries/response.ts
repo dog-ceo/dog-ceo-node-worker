@@ -1,3 +1,5 @@
+import { Alt } from "./breeds"
+
 const headers = {
 	'content-type': 'application/json;charset=UTF-8',
 	'access-control-allow-origin': '*',
@@ -6,6 +8,11 @@ const headers = {
 }
 
 export function responseTwoDimensional(data: { [k: string]: string[]; }): Response {
+	const json = JSON.stringify({'status': 'success', 'message': data});
+	return new Response(json, {headers: headers})
+}
+
+export function responseTwoDimensionalWithAlt(data: Alt[]): Response {
 	const json = JSON.stringify({'status': 'success', 'message': data});
 	return new Response(json, {headers: headers})
 }
