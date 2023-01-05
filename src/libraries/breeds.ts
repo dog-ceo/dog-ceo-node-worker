@@ -42,7 +42,7 @@ export async function listAllBreeds(env: Env): Promise<Map<string, string[]>> {
     return breeds;
 }
 
-export async function listRandomBreedsWithSub(env: Env, params: Params) {
+export async function listRandomBreedsWithSub(env: Env, params: Params): Promise<Map<string, string[]>> {
     const {count} = params;
     let breeds = await listAllBreeds(env);
     const result: Map<string, string[]> = new Map;
@@ -85,7 +85,7 @@ export async function listMainBreeds(env: Env): Promise<Map<string, string[]>> {
     return breeds;
 }
 
-export async function listRandomMainBreeds(env: Env, params: Params) {
+export async function listRandomMainBreeds(env: Env, params: Params): Promise<Map<string, string[]>> {
     const {count} = params;
     let breeds = await listMainBreeds(env);
     const result: Map<string, string[]> = new Map;
@@ -138,7 +138,7 @@ export async function listSubBreeds(env: Env, params: Params): Promise<Map<strin
     return breeds;
 }
 
-export async function listRandomSubBreeds(env: Env, params: Params) {
+export async function listRandomSubBreeds(env: Env, params: Params): Promise<Array<string>> {
     let {count} = params;
     const breeds = await listSubBreeds(env, params);
     const key = getRandomKeyFromBreedsMap(breeds);

@@ -9,12 +9,12 @@ export interface Route {
 const Router = require('@medley/router');
 const router = new Router();
 
-function addRoute(method: string, path: string, handler: Function) {
+function addRoute(method: string, path: string, handler: Function): void{
 	const store = router.register(path);
 	store[method] = handler;
 }
 
-export async function processRoutes(pathname: string, routes: Array<Route>) {
+export async function processRoutes(pathname: string, routes: Array<Route>): Promise<Response> {
 	for (const [key, route] of Object.entries(routes)) {
 		addRoute('GET', route.route, route.handler);
 	}

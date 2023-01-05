@@ -10,7 +10,7 @@ export interface Env {
 	R2_SECRET_ACCESS_KEY: string
 }
 
-export function getClient(env: Env) {
+export function getClient(env: Env): S3Client {
     const config = {
 		region: "us-east-1",
 		endpoint: env.R2_API,
