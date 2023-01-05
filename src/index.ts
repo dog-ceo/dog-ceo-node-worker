@@ -17,6 +17,7 @@ import {
 	getBreedImages,
 	getBreedImageRandom,
 	getBreedImagesRandom,
+	getBreedImagesRandomAlt,
 	getBreedImageRandomCount,
 	getBreedImageRandomCountAlt,
 	listRandomMainBreeds,
@@ -81,6 +82,9 @@ export default {
 			'/api/breed/:breed1/images/random/:count': async (params: Params) => {
 				return responseOneDimensional(await getBreedImagesRandom(env, params));
 			},
+			'/api/breed/:breed1/images/random/:count/alt': async (params: Params) => {
+				return responseTwoDimensional(await getBreedImagesRandomAlt(env, params));
+			},
 			'/api/breed/:breed1/:breed2/images': async (params: Params) => {
 				return responseOneDimensional(await getBreedImages(env, params));
 			},
@@ -91,6 +95,10 @@ export default {
 			'/api/breed/:breed1/:breed2/images/random/:count': async (params: Params) => {
 				const images = await getBreedImagesRandom(env, params);
 				return responseOneDimensional(images);
+			},
+			'/api/breed/:breed1/:breed2/images/random/:count/alt': async (params: Params) => {
+				const images = await getBreedImagesRandomAlt(env, params);
+				return responseTwoDimensional(images);
 			},
 
 			// todo

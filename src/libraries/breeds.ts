@@ -5,15 +5,12 @@ import {
     getObjectsByPrefix,
 } from "./data"
 
+import { Alt } from "./response"
+
 export interface Params {
 	breed1: string,
 	breed2: string,
 	count: number,
-}
-
-export interface Alt {
-	url: string,
-	altText: string,
 }
 
 export async function listAllBreeds(env: Env): Promise<Map<string, string[]>> {
@@ -194,7 +191,28 @@ export async function getBreedImagesRandom(env: Env, params: Params): Promise<st
         return images;
     }
 
-    return images.slice(0, count);;
+    return images.slice(0, count);
+}
+
+export async function getBreedImagesRandomAlt(env: Env, params: Params): Promise<Array<Alt>> {
+    let {count} = params;
+
+    let images = await getBreedImages(env, params);
+
+    images = shuffle(images);
+
+    if (count < images.length) {
+        images = images.slice(0, count);
+    }
+
+    const result: Array<Alt> = [];
+
+    images.forEach((image) => {
+        const alt = {url: image, altText: niceBreedNameFromParams(params)} as Alt;
+        result.push(alt);
+    });
+
+    return result;
 }
 
 export async function getBreedImageRandom(env: Env): Promise<string> {

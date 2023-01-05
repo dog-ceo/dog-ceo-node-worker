@@ -1,4 +1,7 @@
-import { Alt } from "./breeds"
+export interface Alt {
+	url: string,
+	altText: string,
+}
 
 const headers = {
 	'content-type': 'application/json;charset=UTF-8',
