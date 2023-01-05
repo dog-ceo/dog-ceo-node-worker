@@ -105,22 +105,23 @@ export async function listSubBreeds(env: Env, breed1: string): Promise<Map<strin
 
     const breeds: Map<string, string[]> = new Map;
 
+    const subs: string[] = [];
+
     for (const element of elements) {
         const breedString = element.replace(prefix, '').replace(delimiter, '');
         const exploded = breedString.split("-");
         const breed = exploded[0];
 
         if (breed1 === breed) {
+            console.log(breed);
+            console.log(exploded[1]);
             if (!(breed in breeds)) {
                 breeds.set(breed, []);
             }
 
             if (exploded.length > 1) {
-                const secondary = breeds.get(breed);
-                if (secondary) {
-                    secondary.push(exploded[1]);
-                    breeds.set(breed, secondary);
-                }
+                subs.push(exploded[1]);
+                breeds.set(breed, subs);
             }
         }
     }
