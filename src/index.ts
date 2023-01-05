@@ -36,6 +36,7 @@ export default {
 				return responseTwoDimensional(Object.fromEntries(await listSubBreeds(env, breed1)));
 			},
 			'/api/breed/:breed1/images': async (breed1: string) => {
+				console.log(breed1);
 				return responseOneDimensional(await getBreedImages(env, breed1, ''));
 			},
 			'/api/breed/:breed1/:breed2/images': async (breed1: string, breed2: string) => { 

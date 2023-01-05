@@ -1,8 +1,4 @@
-import { 
-	S3Client,
-	ListObjectsV2Command, 
-	ListObjectsV2CommandOutput
-} from "@aws-sdk/client-s3";
+import { ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
 
 const cdnPrefix = "https://images.dog.ceo/";
 

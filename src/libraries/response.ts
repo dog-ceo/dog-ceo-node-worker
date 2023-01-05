@@ -10,12 +10,16 @@ export function responseTwoDimensional(data: { [k: string]: string[]; }): Respon
 	return new Response(json, {headers: headers})
 }
 
-export function responseOneDimensional(data: string[]): Response  {
+export function responseOneDimensional(data: string[]): Response {
 	const json = JSON.stringify({'status': 'success', 'message': data});
 	return new Response(json, {headers: headers})
 }
 
-export function responseString(data: string): Response  {
+export function responseString(data: string): Response {
 	const json = JSON.stringify({'status': 'success', 'message': data});
 	return new Response(json, {headers: headers})
+}
+
+export function notFound(): Response {
+	return new Response('No matching route.', { status: 404 })
 }
