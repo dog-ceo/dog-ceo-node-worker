@@ -80,6 +80,10 @@ export default {
 				const images = await getBreedImagesRandom(env, params);
 				return responseString(images[0]);
 			},
+			'/api/breed/:breed1/:breed2/images/random/:count': async (params: Params) => {
+				const images = await getBreedImagesRandom(env, params);
+				return responseOneDimensional(images);
+			},
 			'/api/breeds/image/random/:count': async (params: Params) => {
 				return responseOneDimensional(await getBreedImageRandomCount(env, params));
 			},
@@ -91,9 +95,6 @@ export default {
 			},
 			// /breed/{breed}
 			// /breed/{breed}/breed2
-
-			// /breed/{breed}/{breed2}/images/random
-			// /breed/{breed}/{breed2}/images/random/count
 			// https://dog.ceo/api/breeds/image/random/9/alt
 			// application/xml
 		};
