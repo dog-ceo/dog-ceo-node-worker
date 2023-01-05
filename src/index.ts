@@ -29,7 +29,7 @@ export default {
 	async fetch(request: Request, env: Env): Promise<Response> {
 		const { pathname } = new URL(request.url);
 
-		const routes = [
+		const routes: Array<Route> = [
 			{
 				route: '/api/breeds/list/all',
 				handler: async () => {
@@ -163,13 +163,13 @@ export default {
 			{
 				// todo
 				route: '/api/breed/:breed1',
-				handler: async (params: Params) => {
+				handler: async () => {
 					return new Response('NOT FOUND');
 				},
 			},
 			{
 				route: '/api/breed/:breed1/:breed2',
-				handler: async (params: Params) => {
+				handler: async () => {
 					return new Response('NOT FOUND');
 				},
 			}
