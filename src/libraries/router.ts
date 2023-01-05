@@ -1,17 +1,22 @@
 import { Params } from "./breeds"
 import { notFound } from "./response"
 
+export interface Route {
+	route: string,
+	handler: Function,
+}
+
 const Router = require('@medley/router');
 const router = new Router();
 
-function addRoute(method: string, path: string, handler: any) {
+function addRoute(method: string, path: string, handler: Function) {
 	const store = router.register(path);
 	store[method] = handler;
 }
 
-export async function processRoutes(pathname: string, routes: Function) {
-	for (const [route, handler] of Object.entries(routes)) {
-		addRoute('GET', route, handler);
+export async function processRoutes(pathname: string, routes: Array<Route>) {
+	for (const [key, route] of Object.entries(routes)) {
+		addRoute('GET', route.route, route.handler);
 	}
 
 	const match = router.find(pathname);

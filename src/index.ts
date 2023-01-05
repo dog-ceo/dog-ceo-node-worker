@@ -1,6 +1,6 @@
 import { Env } from "./libraries/data"
 
-import { processRoutes } from "./libraries/router"
+import { processRoutes, Route } from "./libraries/router"
 
 import {
 	responseString,
@@ -29,87 +29,151 @@ export default {
 	async fetch(request: Request, env: Env): Promise<Response> {
 		const { pathname } = new URL(request.url);
 
-		const routes = {
-			'/api/breeds/list/all': async () => {
-				return responseTwoDimensional(Object.fromEntries(await listAllBreeds(env)));
+		const routes = [
+			{
+				route: '/api/breeds/list/all',
+				handler: async () => {
+					return responseTwoDimensional(Object.fromEntries(await listAllBreeds(env)));
+				},
 			},
-			'/api/breeds/list/all/random': async () => {
-				const params = {count: 1} as Params;
-				return responseTwoDimensional(Object.fromEntries(await listRandomBreedsWithSub(env, params)));
+			{
+				route: '/api/breeds/list/all/random',
+				handler: async () => {
+					const params = {count: 1} as Params;
+					return responseTwoDimensional(Object.fromEntries(await listRandomBreedsWithSub(env, params)));
+				},
 			},
-			'/api/breeds/list/all/random/:count': async (params: Params) => {
-				return responseTwoDimensional(Object.fromEntries(await listRandomBreedsWithSub(env, params)));
+			{
+				route: '/api/breeds/list/all/random/:count',
+				handler: async (params: Params) => {
+					return responseTwoDimensional(Object.fromEntries(await listRandomBreedsWithSub(env, params)));
+				},
 			},
-			'/api/breeds/list': async () => {
-				const breeds = await listMainBreeds(env);
-				return responseOneDimensional(Array.from(breeds.keys()));
+			{
+				route: '/api/breeds/list',
+				handler: async () => {
+					const breeds = await listMainBreeds(env);
+					return responseOneDimensional(Array.from(breeds.keys()));
+				},
 			},
-			'/api/breeds/list/random': async () => {
-				const params = {count: 1} as Params;
-				const breeds = await listRandomMainBreeds(env, params);
-				return responseString(Array.from(breeds.keys())[0]);
+			{
+				route: '/api/breeds/list/random',
+				handler: async () => {
+					const params = {count: 1} as Params;
+					const breeds = await listRandomMainBreeds(env, params);
+					return responseString(Array.from(breeds.keys())[0]);
+				},
 			},
-			'/api/breeds/list/random/:count': async (params: Params) => {
-				const breeds = await listRandomMainBreeds(env, params);
-				return responseOneDimensional(Array.from(breeds.keys()));
+			{
+				route: '/api/breeds/list/random/:count',
+				handler: async (params: Params) => {
+					const breeds = await listRandomMainBreeds(env, params);
+					return responseOneDimensional(Array.from(breeds.keys()));
+				},
 			},
-			'/api/breed/:breed1/list': async(params: Params) => {
-				return responseTwoDimensional(Object.fromEntries(await listSubBreeds(env, params)));
+			{
+				route: '/api/breed/:breed1/list',
+				handler: async(params: Params) => {
+					return responseTwoDimensional(Object.fromEntries(await listSubBreeds(env, params)));
+				},
 			},
-			'/api/breed/:breed1/list/random': async(params: Params) => {
-				const breeds = await listRandomSubBreeds(env, params);
-				return responseString(breeds[0]);
+			{
+				route: '/api/breed/:breed1/list/random',
+				handler: async(params: Params) => {
+					const breeds = await listRandomSubBreeds(env, params);
+					return responseString(breeds[0]);
+				},
 			},
-			'/api/breed/:breed1/list/random/:count': async(params: Params) => {
-				return responseOneDimensional(await listRandomSubBreeds(env, params));
+			{
+				route: '/api/breed/:breed1/list/random/:count',
+				handler: async(params: Params) => {
+					return responseOneDimensional(await listRandomSubBreeds(env, params));
+				},
 			},
-			'/api/breeds/image/random': async () => {
-				return responseString(await getBreedImageRandom(env));
+			{
+				route: '/api/breeds/image/random',
+				handler: async () => {
+					return responseString(await getBreedImageRandom(env));
+				},
 			},
-			'/api/breeds/image/random/:count': async (params: Params) => {
-				return responseOneDimensional(await getBreedImageRandomCount(env, params));
+			{
+				route: '/api/breeds/image/random/:count',
+				handler: async (params: Params) => {
+					return responseOneDimensional(await getBreedImageRandomCount(env, params));
+				},
 			},
-			'/api/breeds/image/random/:count/alt': async (params: Params) => {
-				return responseTwoDimensionalWithAlt(await getBreedImageRandomCountAlt(env, params));
+			{
+				route: '/api/breeds/image/random/:count/alt',
+				handler: async (params: Params) => {
+					return responseTwoDimensionalWithAlt(await getBreedImageRandomCountAlt(env, params));
+				},
 			},
-			'/api/breed/:breed1/images': async (params: Params) => {
-				return responseOneDimensional(await getBreedImages(env, params));
+			{
+				route: '/api/breed/:breed1/images',
+				handler: async (params: Params) => {
+					return responseOneDimensional(await getBreedImages(env, params));
+				},
 			},
-			'/api/breed/:breed1/images/random': async (params: Params) => {
-				const images = await getBreedImagesRandom(env, params);
-				return responseString(images[0]);
+			{
+				route: '/api/breed/:breed1/images/random',
+				handler: async (params: Params) => {
+					const images = await getBreedImagesRandom(env, params);
+					return responseString(images[0]);
+				},
 			},
-			'/api/breed/:breed1/images/random/:count': async (params: Params) => {
-				return responseOneDimensional(await getBreedImagesRandom(env, params));
+			{
+				route: '/api/breed/:breed1/images/random/:count',
+				handler: async (params: Params) => {
+					return responseOneDimensional(await getBreedImagesRandom(env, params));
+				},
 			},
-			'/api/breed/:breed1/images/random/:count/alt': async (params: Params) => {
-				return responseTwoDimensional(await getBreedImagesRandomAlt(env, params));
+			{
+				route: '/api/breed/:breed1/images/random/:count/alt',
+				handler: async (params: Params) => {
+					return responseTwoDimensionalWithAlt(await getBreedImagesRandomAlt(env, params));
+				},
 			},
-			'/api/breed/:breed1/:breed2/images': async (params: Params) => {
-				return responseOneDimensional(await getBreedImages(env, params));
+			{
+				route: '/api/breed/:breed1/:breed2/images',
+				handler: async (params: Params) => {
+					return responseOneDimensional(await getBreedImages(env, params));
+				},
 			},
-			'/api/breed/:breed1/:breed2/images/random': async (params: Params) => {
-				const images = await getBreedImagesRandom(env, params);
-				return responseString(images[0]);
+			{
+				route: '/api/breed/:breed1/:breed2/images/random',
+				handler: async (params: Params) => {
+					const images = await getBreedImagesRandom(env, params);
+					return responseString(images[0]);
+				},
 			},
-			'/api/breed/:breed1/:breed2/images/random/:count': async (params: Params) => {
-				const images = await getBreedImagesRandom(env, params);
-				return responseOneDimensional(images);
+			{
+				route: '/api/breed/:breed1/:breed2/images/random/:count',
+				handler: async (params: Params) => {
+					const images = await getBreedImagesRandom(env, params);
+					return responseOneDimensional(images);
+				},
 			},
-			'/api/breed/:breed1/:breed2/images/random/:count/alt': async (params: Params) => {
-				const images = await getBreedImagesRandomAlt(env, params);
-				return responseTwoDimensional(images);
+			{
+				route: '/api/breed/:breed1/:breed2/images/random/:count/alt',
+				handler: async (params: Params) => {
+					const images = await getBreedImagesRandomAlt(env, params);
+					return responseTwoDimensionalWithAlt(images);
+				},
 			},
-
-			// todo
-			'/api/breed/:breed1': async (params: Params) => {
-				return new Response('NOT FOUND');
+			{
+				// todo
+				route: '/api/breed/:breed1',
+				handler: async (params: Params) => {
+					return new Response('NOT FOUND');
+				},
 			},
-			'/api/breed/:breed1/:breed2': async (params: Params) => {
-				return new Response('NOT FOUND');
-			},
-			// application/xml
-		};
+			{
+				route: '/api/breed/:breed1/:breed2',
+				handler: async (params: Params) => {
+					return new Response('NOT FOUND');
+				},
+			}
+		];
 
 		return processRoutes(pathname, routes);
 	}
