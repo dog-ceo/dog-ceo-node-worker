@@ -34,6 +34,22 @@ export async function listAllBreeds(env: Env): Promise<Map<string, string[]>> {
     return breeds;
 }
 
+export async function listSingleRandomBreedWithSub(env: Env) {
+    const breeds = await listAllBreeds(env);
+    const key = getRandomKeyFromBreedsMap(breeds);
+
+    let value = breeds.get(key);
+
+    if (!value) {
+        value = [];
+    }
+
+    const result: Map<string, string[]> = new Map;
+    result.set(key, value);
+
+    return result;
+}
+
 export async function listMainBreeds(env: Env): Promise<Map<string, string[]>> {
     const prefix = "breeds/";
     const delimiter = "/";
@@ -141,7 +157,7 @@ export async function getBreedImageRandomCount(env: Env, count: number): Promise
     return images;
 }
 
-function getRandomKeyFromBreedsMap(collection: Map<string, string[]>) {
+export function getRandomKeyFromBreedsMap(collection: Map<string, string[]>) {
     let keys = Array.from(collection.keys());
     return keys[Math.floor(Math.random() * keys.length)];
 }

@@ -16,6 +16,7 @@ import {
 	getBreedImageRandom,
 	getBreedImagesRandom,
 	getBreedImageRandomCount,
+	listSingleRandomBreedWithSub,
 } from "./libraries/breeds"
 
 export default {
@@ -25,6 +26,9 @@ export default {
 		const routes = {
 			'/api/breeds/list/all': async () => { 
 				return responseTwoDimensional(Object.fromEntries(await listAllBreeds(env)));
+			},
+			'/api/breeds/list/all/random': async () => { 
+				return responseTwoDimensional(Object.fromEntries(await listSingleRandomBreedWithSub(env)));
 			},
 			'/api/breeds/list': async () => { 
 				return responseTwoDimensional(Object.fromEntries(await listMainBreeds(env)));
