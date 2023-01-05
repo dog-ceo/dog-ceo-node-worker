@@ -15,9 +15,7 @@ function addRoute(method: string, path: string, handler: Function): void{
 }
 
 export async function processRoutes(pathname: string, routes: Array<Route>): Promise<Response> {
-	for (const [key, route] of Object.entries(routes)) {
-		addRoute('GET', route.route, route.handler);
-	}
+	routes.forEach(route => addRoute('GET', route.route, route.handler));
 
 	const match = router.find(pathname);
 

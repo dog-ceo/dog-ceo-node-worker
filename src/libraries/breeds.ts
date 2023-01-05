@@ -159,7 +159,7 @@ export async function listRandomSubBreeds(env: Env, params: Params): Promise<Arr
 }
 
 export async function getBreedImages(env: Env, params: Params): Promise<string[]> {
-    const {breed1, breed2, count} = params;
+    const {breed1, breed2} = params;
 
     let breed = breed1;
 
