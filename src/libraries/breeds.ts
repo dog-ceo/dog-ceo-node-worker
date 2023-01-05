@@ -76,6 +76,27 @@ export async function listMainBreeds(env: Env): Promise<Map<string, string[]>> {
     return breeds;
 }
 
+export async function listRandomMainBreeds(env: Env, count: number) {
+    let breeds = await listMainBreeds(env);
+    const result: Map<string, string[]> = new Map;
+
+    if (count === 1) {
+        const key = getRandomKeyFromBreedsMap(breeds);
+
+        let value = breeds.get(key);
+
+        if (!value) {
+            value = [];
+        }
+
+        result.set(key, value);
+
+        return result;
+    }
+
+    return shuffleBreedsMap(breeds, count);
+}
+
 export async function listSubBreeds(env: Env, breed1: string): Promise<Map<string, string[]>> {
     const prefix = "breeds/";
     const delimiter = "/";
@@ -190,7 +211,7 @@ export function shuffleBreedsMap(breeds: Map<string, string[]>, count = 0): Map<
 }
 
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-function shuffle(array) {
+function shuffle(array: Array<string>): Array<string> {
     let currentIndex = array.length,  randomIndex;
   
     // While there remain elements to shuffle.
