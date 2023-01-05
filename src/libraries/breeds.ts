@@ -174,12 +174,22 @@ export async function getBreedImages(env: Env, params: Params): Promise<string[]
     return elements;
 }
 
-export async function getBreedImagesRandom(env: Env, params: Params): Promise<string> {
-    const breeds = await getBreedImages(env, params);
+export async function getBreedImagesRandom(env: Env, params: Params): Promise<string[]> {
+    let {count} = params;
 
-    const image = breeds[Math.floor(Math.random() * breeds.length)];
+    let images = await getBreedImages(env, params);
 
-    return image;
+    if (count === 1) {
+        return [images[Math.floor(Math.random() * images.length)]];
+    }
+
+    images = shuffle(images);
+
+    if (count > images.length) {
+        return images;
+    }
+
+    return images.slice(0, count);;
 }
 
 export async function getBreedImageRandom(env: Env): Promise<string> {

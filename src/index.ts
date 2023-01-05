@@ -66,14 +66,19 @@ export default {
 			'/api/breed/:breed1/images': async (params: Params) => {
 				return responseOneDimensional(await getBreedImages(env, params));
 			},
+			'/api/breed/:breed1/images/random': async (params: Params) => {
+				const images = await getBreedImagesRandom(env, params);
+				return responseString(images[0]);
+			},
+			'/api/breed/:breed1/images/random/:count': async (params: Params) => {
+				return responseOneDimensional(await getBreedImagesRandom(env, params));
+			},
 			'/api/breed/:breed1/:breed2/images': async (params: Params) => {
 				return responseOneDimensional(await getBreedImages(env, params));
 			},
-			'/api/breed/:breed1/images/random': async (params: Params) => {
-				return responseString(await getBreedImagesRandom(env, params));
-			},
 			'/api/breed/:breed1/:breed2/images/random': async (params: Params) => {
-				return responseString(await getBreedImagesRandom(env, params));
+				const images = await getBreedImagesRandom(env, params);
+				return responseString(images[0]);
 			},
 			'/api/breeds/image/random/:count': async (params: Params) => {
 				return responseOneDimensional(await getBreedImageRandomCount(env, params));
@@ -86,7 +91,7 @@ export default {
 			},
 			// /breed/{breed}
 			// /breed/{breed}/breed2
-			// /api/breed/:breed1/images/random/:count
+
 			// /breed/{breed}/{breed2}/images/random
 			// /breed/{breed}/{breed2}/images/random/count
 			// https://dog.ceo/api/breeds/image/random/9/alt
