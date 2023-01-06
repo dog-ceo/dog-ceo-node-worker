@@ -39,6 +39,12 @@ npm start
 npm run deploy
 ```
 
+### Test
+
+```bash
+NODE_OPTIONS=--experimental-vm-modules npx jest
+```
+
 ## Endpoints
 
 #### /breeds/list/all
