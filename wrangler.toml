@@ -13,3 +13,8 @@ cache_persist = true
 kv_namespaces = [
   { binding = "DOGSTUFF", id = "3451ecb077864e0dbd70f4e44566f4f3", preview_id = "bf9ab5a9680a46cb9daebf0bd50ab454" }
 ]
+
+[env.production]
+kv_namespaces = [
+  { binding = "DOGSTUFF", id = "3451ecb077864e0dbd70f4e44566f4f3" }
+]
