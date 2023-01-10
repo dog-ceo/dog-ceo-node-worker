@@ -3,7 +3,7 @@ export interface Alt {
 	altText: string,
 }
 
-const headers = {
+let headers = {
 	'content-type': 'application/json;charset=UTF-8',
 	'access-control-allow-origin': '*',
 	// Cache for 1 hour
@@ -15,8 +15,22 @@ export function responseTwoDimensional(data: { [k: string]: string[]; }): Respon
 	return new Response(json, {headers: headers})
 }
 
+export function responseTwoDimensionalNoCache(data: { [k: string]: string[]; }): Response {
+	const json = JSON.stringify({'status': 'success', 'message': data});
+	headers["cache-control"] = '';
+	return new Response(json, {headers: headers})
+}
+
+/*
 export function responseTwoDimensionalWithAlt(data: Alt[]): Response {
 	const json = JSON.stringify({'status': 'success', 'message': data});
+	return new Response(json, {headers: headers})
+}
+*/
+
+export function responseTwoDimensionalWithAltNoCache(data: Alt[]): Response {
+	const json = JSON.stringify({'status': 'success', 'message': data});
+	headers["cache-control"] = '';
 	return new Response(json, {headers: headers})
 }
 
@@ -25,8 +39,22 @@ export function responseOneDimensional(data: string[]): Response {
 	return new Response(json, {headers: headers})
 }
 
+export function responseOneDimensionalNoCache(data: string[]): Response {
+	const json = JSON.stringify({'status': 'success', 'message': data});
+	headers["cache-control"] = '';
+	return new Response(json, {headers: headers})
+}
+
+/*
 export function responseString(data: string): Response {
 	const json = JSON.stringify({'status': 'success', 'message': data});
+	return new Response(json, {headers: headers})
+}
+*/
+
+export function responseStringNoCache(data: string): Response {
+	const json = JSON.stringify({'status': 'success', 'message': data});
+	headers["cache-control"] = '';
 	return new Response(json, {headers: headers})
 }
 

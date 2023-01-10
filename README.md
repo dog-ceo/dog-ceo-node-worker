@@ -31,7 +31,7 @@ This current version is using cloudflare workers. [The old PHP version can be fo
 
 ```bash
 npm install
-npm start
+npm run dev:remote
 ```
 
 ### Deploy
