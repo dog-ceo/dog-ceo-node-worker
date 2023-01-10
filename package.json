@@ -19,7 +19,7 @@
   "private": true,
   "scripts": {
     "build": "node build.js",
-    "dev": "miniflare --live-reload --debug --modules dist/index.mjs",
+    "dev": "miniflare --kv DOGSTUFF --live-reload --debug --modules dist/index.mjs",
     "dev:remote": "wrangler dev",
     "test": "npm run build && node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js --coverage",
     "types:check": "tsc && tsc -p test/tsconfig.json",

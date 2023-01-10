@@ -1,9 +1,10 @@
 export default {
     testEnvironment: "miniflare",
     testEnvironmentOptions: {
-        //modules: true,
-        //bindings: { KEY: "value" },
-        //kvNamespaces: ["DOGSTUFF"],
+        // modules: true,
+        bindings: { R2_BUCKET: "TESTBUCKET" },
+        //r2Buckets: ["TESTBUCKET"],
+        kvNamespaces: ["DOGSTUFF"],
     },
     collectCoverageFrom: [
         "src/**/*.{js,jsx,ts,tsx}",
