@@ -303,13 +303,14 @@ test("api/breeds/image/random/5/alt", async () => {
   env.S3_CLIENT = new S3Client({});
 
   const res = await handleRequest(new Request("http://localhost/api/breeds/image/random/5/alt"), env);
-  const obj = JSON.parse(await res.text()).message
-  const count = Object.keys(obj).length;
+  const obj = JSON.parse(await res.text())
+  const count = Object.keys(obj.message).length;
   expect(res.status).toBe(200);
+  expect(obj.status).toBe('success');
   expect(count).toBe(5);
-  expect(obj[0].altText).toBe('Hound1 dog.');
-  expect(obj[4].url).toContain('https://images.dog.ceo/breeds/hound1/lol123');
-  expect(obj[3].url).toContain('.jpg');
+  expect(obj.message[0].altText).toBe('Hound1 dog.');
+  expect(obj.message[4].url).toContain('https://images.dog.ceo/breeds/hound1/lol123');
+  expect(obj.message[3].url).toContain('.jpg');
 });
 
 // /api/breed/:breed1/images
@@ -339,12 +340,13 @@ test("/api/breed/:breed1/images", async () => {
 
   const res = await handleRequest(new Request("http://localhost/api/breed/hound1/images"), env);
 
-  const obj = JSON.parse(await res.text()).message
-  const count = Object.keys(obj).length;
+  const obj = JSON.parse(await res.text())
+  const count = Object.keys(obj.message).length;
   expect(res.status).toBe(200);
+  expect(obj.status).toBe('success');
   expect(count).toBe(6);
-  expect(obj[4]).toContain('https://images.dog.ceo/breeds/hound1/lol123');
-  expect(obj[3]).toContain('.jpg');
+  expect(obj.message[4]).toContain('https://images.dog.ceo/breeds/hound1/lol123');
+  expect(obj.message[3]).toContain('.jpg');
 });
 
 // /api/breed/:breed1/images/random
@@ -407,10 +409,48 @@ test("/api/breed/:breed1/images/random/2", async () => {
 
   const res = await handleRequest(new Request("http://localhost/api/breed/hound1/images/random/2"), env);
 
-  const obj = JSON.parse(await res.text()).message
-  const count = Object.keys(obj).length;
+  const obj = JSON.parse(await res.text())
+  const count = Object.keys(obj.message).length;
   expect(res.status).toBe(200);
+  expect(obj.status).toBe('success');
   expect(count).toBe(2);
-  expect(obj[0]).toContain('https://images.dog.ceo/breeds/hound1/lol123');
-  expect(obj[1]).toContain('.jpg');
+  expect(obj.message[0]).toContain('https://images.dog.ceo/breeds/hound1/lol123');
+  expect(obj.message[1]).toContain('.jpg');
+});
+
+// /api/breed/:breed1/images/random/2/alt
+test("/api/breed/:breed1/images/random/2/alt", async () => {
+  const env = getMiniflareBindings();
+
+  const s3Mock = mockClient(S3Client);
+
+  s3Mock.on(ListObjectsV2Command).resolves(
+    { CommonPrefixes: 
+      [
+        {Prefix: 'breeds/hound1'},
+      ] as CommonPrefix[],
+      Contents:
+      [
+        {Key: 'breeds/hound1/lol123.jpg'},
+        {Key: 'breeds/hound1/lol1234.jpg'},
+        {Key: 'breeds/hound1/lol1235.jpg'},
+        {Key: 'breeds/hound1/lol1236.jpg'},
+        {Key: 'breeds/hound1/lol1237.jpg'},
+        {Key: 'breeds/hound1/lol1238.jpg'},
+      ]
+    }
+  );
+
+  env.S3_CLIENT = new S3Client({});
+
+  const res = await handleRequest(new Request("http://localhost/api/breed/hound1/images/random/2/alt"), env);
+
+  const obj = JSON.parse(await res.text())
+  const count = Object.keys(obj.message).length;
+  expect(res.status).toBe(200);
+  expect(obj.status).toBe('success');
+  expect(count).toBe(2);
+  expect(obj.message[0].url).toContain('https://images.dog.ceo/breeds/hound1/lol123');
+  expect(obj.message[1].url).toContain('.jpg');
+  expect(obj.message[1].altText).toContain('Hound1 dog.');
 });
