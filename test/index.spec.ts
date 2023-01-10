@@ -166,6 +166,31 @@ test("api/breed/:breed1/list", async () => {
   expect(JSON.parse(await res.text())).toStrictEqual({status: 'success', message: {hound3: ['lol1', 'lol2']}});
 });
 
+// /api/breed/BADBREED/list
+test("api/breed/BADBREED/list", async () => {
+  const env = getMiniflareBindings();
+
+  const s3Mock = mockClient(S3Client);
+
+  s3Mock.on(ListObjectsV2Command).resolves({ CommonPrefixes: [
+    //{Prefix: 'breeds/hound1'},
+    //{Prefix: 'breeds/hound2'},
+    //{Prefix: 'breeds/hound3-lol1'},
+    //{Prefix: 'breeds/hound3-lol2'},
+    //{Prefix: 'breeds/hound4'},
+    //{Prefix: 'breeds/hound5-somethingelse'},
+  ] as CommonPrefix[] });
+
+  env.S3_CLIENT = new S3Client({});
+
+  const res = await handleRequest(new Request("http://localhost/api/breed/BADBREED/list"), env);
+
+  expect(res.status).toBe(200);
+
+  // should this be a 404?
+  expect(JSON.parse(await res.text())).toStrictEqual({status: 'success', message: {}});
+});
+
 // /api/breed/:breed1/list/random
 test("api/breed/:breed1/list/random", async () => {
   const env = getMiniflareBindings();
@@ -488,6 +513,39 @@ test("/api/breed/:breed1/:breed2/images", async () => {
   expect(obj.message.length).toBe(3)
   expect(obj.message[0]).toContain('https://images.dog.ceo/breeds/hound1-basset/lol123')
   expect(obj.message[2]).toContain('.jpg')
+});
+
+// /api/breed/BAD1/BAD2/images
+test("/api/breed/BAD1/BAD2/images", async () => {
+  const env = getMiniflareBindings();
+
+  const s3Mock = mockClient(S3Client);
+
+  s3Mock.on(ListObjectsV2Command).resolves(
+    { CommonPrefixes: 
+      [
+        //{Prefix: 'breeds/hound1'},
+        //{Prefix: 'breeds/hound1-basset'},
+      ] as CommonPrefix[],
+      Contents:
+      [
+        //{Key: 'breeds/hound1-basset/lol123.jpg'},
+        //{Key: 'breeds/hound1/lol1234.jpg'},
+        //{Key: 'breeds/hound1-basset/lol1235.jpg'},
+        //{Key: 'breeds/hound1/lol1236.jpg'},
+        //{Key: 'breeds/hound1-basset/lol1237.jpg'},
+        //{Key: 'breeds/hound1/lol1238.jpg'},
+      ]
+    }
+  );
+
+  env.S3_CLIENT = new S3Client({});
+
+  // should this be 404?
+  const res = await handleRequest(new Request("http://localhost/api/breed/BAD1/BAD2/images"), env);
+  const obj = JSON.parse(await res.text());
+  expect(res.status).toBe(200);
+  expect(obj.status).toBe('success');
 });
 
 // /api/breed/:breed1/:breed2/images/random
