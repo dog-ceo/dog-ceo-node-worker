@@ -1,6 +1,5 @@
 import { 
     Env,
-    getClient,
     getCommonPrefixesByDelimeterAndPrefix,
     getObjectsByPrefix,
 } from "./data"
