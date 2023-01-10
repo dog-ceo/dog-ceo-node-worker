@@ -25,9 +25,20 @@ import {
 	listRandomSubBreeds,
 } from "./libraries/breeds"
 
+import {
+	getClient
+} from "./libraries/data"
+
 export default {
 	async fetch(request: Request, env: Env): Promise<Response> {
-		const { pathname } = new URL(request.url);
+		const client = getClient(env);
+		env.S3_CLIENT = client;
+		return handleRequest(request, env);
+	}
+}
+
+export async function handleRequest(request: Request, env: Env) {
+	const { pathname } = new URL(request.url);
 
 		const routes: Array<Route> = [
 			{
@@ -176,5 +187,4 @@ export default {
 		];
 
 		return processRoutes(pathname, routes);
-	}
 }

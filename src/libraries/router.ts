@@ -1,12 +1,12 @@
 import { Params } from "./breeds"
 import { notFound } from "./response"
+import Router from "@medley/router"
 
 export interface Route {
 	route: string,
 	handler: Function,
 }
 
-const Router = require('@medley/router');
 const router = new Router();
 
 function addRoute(method: string, path: string, handler: Function): void{

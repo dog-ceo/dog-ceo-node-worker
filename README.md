@@ -5,7 +5,8 @@ This current version is using cloudflare workers. [The old PHP version can be fo
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Maintainability](https://api.codeclimate.com/v1/badges/350767ac49221209a1e3/maintainability)](https://codeclimate.com/github/dog-ceo/dog-ceo-node-worker/maintainability)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=dog-ceo_dog-ceo-node-worker&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=dog-ceo_dog-ceo-node-worker)
-todo: codecov
+[![codecov](https://codecov.io/gh/dog-ceo/dog-ceo-node-worker/branch/main/graph/badge.svg?token=C5J8DCB12S)](https://codecov.io/gh/dog-ceo/dog-ceo-node-worker)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/dog-ceo/dog-ceo-node-worker/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/dog-ceo/dog-ceo-node-worker/tree/main)
 
 ## Info
 
@@ -37,6 +38,12 @@ npm start
 
 ```bash
 npm run deploy
+```
+
+### Test
+
+```bash
+npm run test
 ```
 
 ## Endpoints

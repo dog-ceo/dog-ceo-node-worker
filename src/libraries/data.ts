@@ -3,6 +3,7 @@ import { ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
 const cdnPrefix = "https://images.dog.ceo/";
 
 export interface Env {
+	S3_CLIENT: S3Client
 	DOGSTUFF: KVNamespace
 	R2_API: string
 	R2_BUCKET: string
@@ -25,12 +26,14 @@ export function getClient(env: Env): S3Client {
     return client;
 }
 
-export async function getCommonPrefixesByDelimeterAndPrefix(env: Env, client: S3Client, delimeter: string, prefix: string, cacheKey: string): Promise<string[]> {
+export async function getCommonPrefixesByDelimeterAndPrefix(env: Env, delimeter: string, prefix: string, cacheKey: string): Promise<string[]> {
 	const input = {
 		Bucket: env.R2_BUCKET,
 		Delimiter: delimeter,
 		Prefix: prefix,
 	};
+
+	const client = env.S3_CLIENT;
 
 	let elements: string[] = [];
 
@@ -45,7 +48,7 @@ export async function getCommonPrefixesByDelimeterAndPrefix(env: Env, client: S3
 	const command = new ListObjectsV2Command(input);
 
 	const listed = await client.send(command);
-	
+
 	if (listed && listed.CommonPrefixes) {
 		for (const element of listed.CommonPrefixes) {
 			if (element && element.Prefix) {
@@ -59,11 +62,13 @@ export async function getCommonPrefixesByDelimeterAndPrefix(env: Env, client: S3
 	return elements;
 }
 
-export async function getObjectsByPrefix(env: Env, client: S3Client, prefix: string, cacheKey: string): Promise<string[]> {
+export async function getObjectsByPrefix(env: Env, prefix: string, cacheKey: string): Promise<string[]> {
 	const input = {
 		Bucket: env.R2_BUCKET,
 		Prefix: prefix,
 	};
+
+	const client = env.S3_CLIENT;
 
 	let elements: string[] = [];
 
