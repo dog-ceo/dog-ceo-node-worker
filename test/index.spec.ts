@@ -59,11 +59,11 @@ test("api/breeds/list/all/random/3", async () => {
   const s3Mock = mockClient(S3Client);
 
   s3Mock.on(ListObjectsV2Command).resolves({ CommonPrefixes: [
-    {Prefix: 'breeds/hound11'},
-    {Prefix: 'breeds/hound22'},
-    {Prefix: 'breeds/hound33'},
-    {Prefix: 'breeds/hound44'},
-    {Prefix: 'breeds/hound55-somethingelse'},
+    {Prefix: 'breeds/hound1'},
+    {Prefix: 'breeds/hound2'},
+    {Prefix: 'breeds/hound3'},
+    {Prefix: 'breeds/hound4'},
+    {Prefix: 'breeds/hound5-somethingelse'},
   ] as CommonPrefix[] });
 
   env.S3_CLIENT = new S3Client({});
@@ -82,8 +82,8 @@ test("api/breeds/list", async () => {
   const s3Mock = mockClient(S3Client);
 
   s3Mock.on(ListObjectsV2Command).resolves({ CommonPrefixes: [
-    {Prefix: 'breeds/hound111'},
-    {Prefix: 'breeds/hound555-somethingelse'},
+    {Prefix: 'breeds/hound1'},
+    {Prefix: 'breeds/hound5-somethingelse'},
   ] as CommonPrefix[] });
 
   env.S3_CLIENT = new S3Client({});
@@ -102,8 +102,8 @@ test("api/breeds/list/random", async () => {
   const s3Mock = mockClient(S3Client);
 
   s3Mock.on(ListObjectsV2Command).resolves({ CommonPrefixes: [
-    {Prefix: 'breeds/hound1111'},
-    {Prefix: 'breeds/hound1111-somethingelse'},
+    {Prefix: 'breeds/hound1'},
+    {Prefix: 'breeds/hound1-somethingelse'},
   ] as CommonPrefix[] });
 
   env.S3_CLIENT = new S3Client({});
@@ -122,11 +122,11 @@ test("api/breeds/list/random/4", async () => {
   const s3Mock = mockClient(S3Client);
 
   s3Mock.on(ListObjectsV2Command).resolves({ CommonPrefixes: [
-    {Prefix: 'breeds/hound11111'},
-    {Prefix: 'breeds/hound22222'},
-    {Prefix: 'breeds/hound33333'},
-    {Prefix: 'breeds/hound44444'},
-    {Prefix: 'breeds/hound55555-somethingelse'},
+    {Prefix: 'breeds/hound1'},
+    {Prefix: 'breeds/hound2'},
+    {Prefix: 'breeds/hound3'},
+    {Prefix: 'breeds/hound4'},
+    {Prefix: 'breeds/hound5-somethingelse'},
   ] as CommonPrefix[] });
 
   env.S3_CLIENT = new S3Client({});
