@@ -6,8 +6,8 @@ export default {
         //kvNamespaces: ["DOGSTUFF"],
     },
     collectCoverageFrom: [
-        "index.js",
-        "src/*.js"
+        "src/**/*.{js,jsx,ts,tsx}",
+        "!<rootDir>/node_modules/"
     ],
     moduleNameMapper: {
         "^@/(.*)$": "<rootDir>/src/$1",
