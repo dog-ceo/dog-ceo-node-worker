@@ -3,6 +3,7 @@ import { Env } from "./libraries/data"
 import { processRoutes, Route } from "./libraries/router"
 
 import {
+	breedNotFound,
 	responseString,
 	responseOneDimensional,
 	responseTwoDimensional,
@@ -51,7 +52,11 @@ export async function handleRequest(request: Request, env: Env) {
 				route: '/api/breeds/list/all/random',
 				handler: async () => {
 					const params = {count: 1} as Params;
-					return responseTwoDimensional(Object.fromEntries(await listRandomBreedsWithSub(env, params)));
+					const breeds = await listRandomBreedsWithSub(env, params);
+					if (breeds.has('NOTFOUND')) {
+						return breedNotFound();
+					}
+					return responseTwoDimensional(Object.fromEntries(breeds));
 				},
 			},
 			{
@@ -72,6 +77,9 @@ export async function handleRequest(request: Request, env: Env) {
 				handler: async () => {
 					const params = {count: 1} as Params;
 					const breeds = await listRandomMainBreeds(env, params);
+					if (breeds.has('NOTFOUND')) {
+						return breedNotFound();
+					}
 					return responseString(Array.from(breeds.keys())[0]);
 				},
 			},

@@ -50,11 +50,11 @@ export async function listRandomBreedsWithSub(env: Env, params: Params): Promise
     const result: Map<string, string[]> = new Map;
 
     if (count === 1) {
-        const key = getRandomKeyFromBreedsMap(breeds);
-
+        let key = getRandomKeyFromBreedsMap(breeds);
         let value = breeds.get(key);
 
         if (!value) {
+            key = 'NOTFOUND';
             value = [];
         }
 
@@ -92,11 +92,11 @@ export async function listRandomMainBreeds(env: Env, params: Params): Promise<Ma
     const result: Map<string, string[]> = new Map;
 
     if (count === 1) {
-        const key = getRandomKeyFromBreedsMap(breeds);
-
+        let key = getRandomKeyFromBreedsMap(breeds);
         let value = breeds.get(key);
 
         if (!value) {
+            key = 'NOTFOUND';
             value = [];
         }
 

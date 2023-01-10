@@ -30,6 +30,11 @@ export function responseString(data: string): Response {
 	return new Response(json, {headers: headers})
 }
 
-export function notFound(): Response {
+export function routeNotFound(): Response {
 	return new Response('No matching route.', { status: 404 })
+}
+
+export function breedNotFound(): Response {
+	const json = JSON.stringify({'status': 'error', 'message': 'Breed not found.'});
+	return new Response(json, { status: 404 })
 }

@@ -1,5 +1,5 @@
 import { Params } from "./breeds"
-import { notFound } from "./response"
+import { routeNotFound } from "./response"
 import Router from "@medley/router"
 
 export interface Route {
@@ -25,5 +25,5 @@ export async function processRoutes(pathname: string, routes: Array<Route>): Pro
 		return handler(params);
 	}
 
-	return notFound();
+	return routeNotFound();
 }

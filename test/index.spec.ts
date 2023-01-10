@@ -52,6 +52,24 @@ test("api/breeds/list/all/random", async () => {
   expect(JSON.parse(await res.text())).toStrictEqual({status: 'success', message: {'hound': ['something', 'somethingelse']}});
 });
 
+// api/breeds/list/all/random
+test("api/breeds/list/all/random", async () => {
+  const env = getMiniflareBindings();
+
+  const s3Mock = mockClient(S3Client);
+
+  s3Mock.on(ListObjectsV2Command).resolves({ CommonPrefixes: [
+    // NOTHING returned from R2?
+  ] as CommonPrefix[] });
+
+  env.S3_CLIENT = new S3Client({});
+
+  const res = await handleRequest(new Request("http://localhost/api/breeds/list/all/random"), env);
+
+  expect(res.status).toBe(404);
+  expect(JSON.parse(await res.text())).toStrictEqual({status: 'error', message: 'Breed not found.'});
+});
+
 // api/breeds/list/all/random/3
 test("api/breeds/list/all/random/3", async () => {
   const env = getMiniflareBindings();
@@ -114,6 +132,24 @@ test("api/breeds/list/random", async () => {
   expect(JSON.parse(await res.text())).toStrictEqual({status: 'success', message: 'hound1'});
 
   expect(res.status).toBe(200);
+});
+
+// api/breeds/list/random
+test("api/breeds/list/random", async () => {
+  const env = getMiniflareBindings();
+
+  const s3Mock = mockClient(S3Client);
+
+  s3Mock.on(ListObjectsV2Command).resolves({ CommonPrefixes: [
+    // NOTHING returned from R2?
+  ] as CommonPrefix[] });
+
+  env.S3_CLIENT = new S3Client({});
+
+  const res = await handleRequest(new Request("http://localhost/api/breeds/list/random"), env);
+
+  expect(res.status).toBe(404);
+  expect(JSON.parse(await res.text())).toStrictEqual({status: 'error', message: 'Breed not found.'});
 });
 
 // api/breeds/list/random/3
