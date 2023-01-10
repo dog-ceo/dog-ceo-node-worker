@@ -171,19 +171,6 @@ export async function handleRequest(request: Request, env: Env) {
 					return responseTwoDimensionalWithAlt(images);
 				},
 			},
-			{
-				// todo
-				route: '/api/breed/:breed1',
-				handler: async () => {
-					return new Response('NOT FOUND');
-				},
-			},
-			{
-				route: '/api/breed/:breed1/:breed2',
-				handler: async () => {
-					return new Response('NOT FOUND');
-				},
-			}
 		];
 
 		return processRoutes(pathname, routes);

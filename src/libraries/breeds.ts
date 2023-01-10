@@ -36,7 +36,7 @@ export async function listAllBreeds(env: Env): Promise<Map<string, string[]>> {
             const secondary = breeds.get(breed);
             if (secondary) {
                 secondary.push(exploded[1]);
-                        breeds.set(breed, secondary);
+                breeds.set(breed, secondary);
             }
         }
     }
@@ -183,24 +183,28 @@ function extractBreedStringFromParams(params: Params): string {
 
 async function breedExists(env: Env, params: Params): Promise<boolean> {
     // Gets a list of all breeds, usually from cache
-    const breeds = await listMainBreeds(env);
+    const breeds = await listAllBreeds(env);
     const breed = extractBreedStringFromParams(params);
 
-    let match = false;
-
-    Array.from(breeds.keys()).every(item => {
-        // Remove prefix and then slashes from beginning and end
-        item = item.replace(prefix, '').replace(/^\/|\/$/g, '');
-
-        if (item === breed) {
-            match = true;
-            return false; // break
+    // a breed1 was set
+    if (params.breed1.length > 0) {
+        // breed 1 exists in breeds and breed 2 was not set
+        if (breeds.has(params.breed1) && (!params.breed2 || params.breed2.length === 0)) {
+            return true;
         }
 
-        return true; // continue
-    });
+        // breed 1 exists in breeds and breed2 was also set
+        if (breeds.has(params.breed1) && params.breed2) {
+            // get breed 1 array
+            const breed1 = breeds.get(params.breed1);
+            // if breed2 is in the breed1 array
+            if (breed1 && params.breed2 && breed1.includes(params.breed2)) {
+                return true;
+            }
+        }
+    } 
 
-    return match;
+    return false;
 }
 
 export async function getBreedImagesRandom(env: Env, params: Params): Promise<string[]> {
