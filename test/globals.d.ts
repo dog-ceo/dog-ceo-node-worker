@@ -1,5 +1,7 @@
+import { Env } from "@/libraries/data";
+
 declare global {
-    function getMiniflareBindings(): Bindings;
+    function getMiniflareBindings(): Env;
 }
 
 export {};

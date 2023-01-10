@@ -1,3 +1,5 @@
+import { S3Client } from "@aws-sdk/client-s3";
+
 import { Env } from "./libraries/data"
 
 import { processRoutes, Route } from "./libraries/router"
@@ -25,8 +27,14 @@ import {
 	listRandomSubBreeds,
 } from "./libraries/breeds"
 
+import {
+	getClient
+} from "./libraries/data"
+
 export default {
 	async fetch(request: Request, env: Env): Promise<Response> {
+		const client = getClient(env);
+		env.S3_CLIENT = client;
 		return handleRequest(request, env);
 	}
 }

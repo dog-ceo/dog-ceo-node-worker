@@ -16,6 +16,8 @@ test("should get list of all breeds", async () => {
     params: { Bucket: env.R2_BUCKET }
   });
 
+  env.S3_CLIENT = s3;
+
   s3.putObject({Key: 'breeds/hound/image1.jpg', Body: '12345', Bucket: env.R2_BUCKET}, function(err: any, data: any) {
     s3.listObjects({Prefix: 'breeds/hound', Bucket: env.R2_BUCKET}, function (err: any, data: any) {
       console.log(data);

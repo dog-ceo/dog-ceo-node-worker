@@ -1,8 +1,10 @@
+import { S3Client } from "@aws-sdk/client-s3";
+
 export default {
     testEnvironment: "miniflare",
     testEnvironmentOptions: {
         // modules: true,
-        bindings: { R2_BUCKET: "TESTBUCKET" },
+        bindings: { R2_BUCKET: "TESTBUCKET", S3_CLIENT: S3Client},
         //r2Buckets: ["TESTBUCKET"],
         kvNamespaces: ["DOGSTUFF"],
     },

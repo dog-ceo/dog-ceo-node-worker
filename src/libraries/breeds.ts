@@ -20,7 +20,7 @@ const prefix = "breeds/";
 export async function listAllBreeds(env: Env): Promise<Map<string, string[]>> {
     const delimiter = "/";
 
-    const elements = await getCommonPrefixesByDelimeterAndPrefix(env, getClient(env), delimiter, prefix, 'listAllBreeds');
+    const elements = await getCommonPrefixesByDelimeterAndPrefix(env, delimiter, prefix, 'listAllBreeds');
 
     const breeds: Map<string, string[]> = new Map;
 
@@ -70,7 +70,7 @@ export async function listRandomBreedsWithSub(env: Env, params: Params): Promise
 export async function listMainBreeds(env: Env): Promise<Map<string, string[]>> {
     const delimiter = "/";
 
-    const elements = await getCommonPrefixesByDelimeterAndPrefix(env, getClient(env), delimiter, prefix, 'listMainBreeds');
+    const elements = await getCommonPrefixesByDelimeterAndPrefix(env, delimiter, prefix, 'listMainBreeds');
 
     const breeds: Map<string, string[]> = new Map;
 
@@ -114,7 +114,7 @@ export async function listSubBreeds(env: Env, params: Params): Promise<Map<strin
     const prefix = "breeds/";
     const delimiter = "/";
 
-    const elements = await getCommonPrefixesByDelimeterAndPrefix(env, getClient(env), delimiter, prefix, 'listSubBreeds:' + breed1);
+    const elements = await getCommonPrefixesByDelimeterAndPrefix(env, delimiter, prefix, 'listSubBreeds:' + breed1);
 
     const breeds: Map<string, string[]> = new Map;
 
@@ -164,7 +164,7 @@ export async function getBreedImages(env: Env, params: Params): Promise<string[]
     if (await breedExists(env, params)) {
         const breed = extractBreedStringFromParams(params);
 
-        return await getObjectsByPrefix(env, getClient(env), prefix + breed, 'getBreedImages:' + breed);
+        return await getObjectsByPrefix(env, prefix + breed, 'getBreedImages:' + breed);
     }
 
     return [];
