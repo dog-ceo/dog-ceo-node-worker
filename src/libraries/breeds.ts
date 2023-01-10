@@ -327,11 +327,7 @@ function niceBreedNameFromParams(params: Params): string {
         output += ' dog.';
     }
 
-    if (output.length) {
-        return capitalizeFirstLetter(output);
-    }
-
-    return 'Unknown breed of dog.'
+    return capitalizeFirstLetter(output);
 }
 
 export function getRandomKeyFromBreedsMap(collection: Map<string, string[]>) {
@@ -351,11 +347,14 @@ export function shuffleBreedsMap(breeds: Map<string, string[]>, count = 0): Map<
     keys.forEach(function (item: string) {
         let value = breeds.get(item);
 
+        // Unreachable code but still here to make TS happy
         if (!value) {
             value = [];
         }
 
-        result.set(item, value)
+        if (breeds.has(item)) {
+            result.set(item, value);
+        }
     });
 
     return result;

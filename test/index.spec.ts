@@ -209,12 +209,7 @@ test("api/breed/BADBREED/list", async () => {
   const s3Mock = mockClient(S3Client);
 
   s3Mock.on(ListObjectsV2Command).resolves({ CommonPrefixes: [
-    //{Prefix: 'breeds/hound1'},
-    //{Prefix: 'breeds/hound2'},
-    //{Prefix: 'breeds/hound3-lol1'},
-    //{Prefix: 'breeds/hound3-lol2'},
-    //{Prefix: 'breeds/hound4'},
-    //{Prefix: 'breeds/hound5-somethingelse'},
+    // NOTHING returned from R2?
   ] as CommonPrefix[] });
 
   env.S3_CLIENT = new S3Client({});
@@ -249,6 +244,24 @@ test("api/breed/:breed1/list/random", async () => {
   expect(res.status).toBe(200);
 
   expect(JSON.parse(await res.text())).toStrictEqual({status: 'success', message: 'lol1'});
+});
+
+// /api/breed/:breed1/list/random
+test("api/breed/:breed1/list/random", async () => {
+  const env = getMiniflareBindings();
+
+  const s3Mock = mockClient(S3Client);
+
+  s3Mock.on(ListObjectsV2Command).resolves({ CommonPrefixes: [
+    // NOTHING returned from R2?
+  ] as CommonPrefix[] });
+
+  env.S3_CLIENT = new S3Client({});
+
+  const res = await handleRequest(new Request("http://localhost/api/breed/hound3/list/random"), env);
+
+  expect(res.status).toBe(404);
+  expect(JSON.parse(await res.text())).toStrictEqual({status: 'error', message: 'Breed not found.'});
 });
 
 // /api/breed/:breed1/list/random/3
@@ -302,8 +315,8 @@ test("api/breeds/image/random", async () => {
   expect(JSON.parse(await res.text())).toStrictEqual({status: 'success', message: 'https://images.dog.ceo/breeds/hound1/lol123.jpg'});
 });
 
-// /api/breeds/image/random/5
-test("api/breeds/image/random/5", async () => {
+// /api/breeds/image/random/99999
+test("api/breeds/image/random/99999", async () => {
   const env = getMiniflareBindings();
 
   const s3Mock = mockClient(S3Client);
@@ -327,19 +340,19 @@ test("api/breeds/image/random/5", async () => {
 
   env.S3_CLIENT = new S3Client({});
 
-  const res = await handleRequest(new Request("http://localhost/api/breeds/image/random/5"), env);
+  const res = await handleRequest(new Request("http://localhost/api/breeds/image/random/99999"), env);
 
   const obj = JSON.parse(await res.text());
   const count = Object.keys(obj.message).length;
   expect(res.status).toBe(200);
   expect(obj.status).toBe('success');
-  expect(count).toBe(5);
+  expect(count).toBe(6);
   expect(obj.message[0]).toContain('hound1/lol123');
   expect(obj.message[4]).toContain('.jpg');
 });
 
-// /api/breeds/image/random/5/alt
-test("api/breeds/image/random/5/alt", async () => {
+// /api/breeds/image/random/2
+test("api/breeds/image/random/2", async () => {
   const env = getMiniflareBindings();
 
   const s3Mock = mockClient(S3Client);
@@ -363,12 +376,49 @@ test("api/breeds/image/random/5/alt", async () => {
 
   env.S3_CLIENT = new S3Client({});
 
-  const res = await handleRequest(new Request("http://localhost/api/breeds/image/random/5/alt"), env);
+  const res = await handleRequest(new Request("http://localhost/api/breeds/image/random/2"), env);
+
+  const obj = JSON.parse(await res.text());
+  const count = Object.keys(obj.message).length;
+  expect(res.status).toBe(200);
+  expect(obj.status).toBe('success');
+  expect(count).toBe(2);
+  expect(obj.message[0]).toContain('hound1/lol123');
+  expect(obj.message[1]).toContain('.jpg');
+});
+
+// /api/breeds/image/random/99999/alt
+test("api/breeds/image/random/99999/alt", async () => {
+  const env = getMiniflareBindings();
+
+  const s3Mock = mockClient(S3Client);
+
+  s3Mock.on(ListObjectsV2Command).resolves(
+    { CommonPrefixes: 
+      [
+        {Prefix: 'breeds/hound1'},
+      ] as CommonPrefix[],
+      Contents:
+      [
+        {Key: 'breeds/hound1/lol123.jpg'},
+        {Key: 'breeds/hound1/lol1234.jpg'},
+        {Key: 'breeds/hound1/lol1235.jpg'},
+        {Key: 'breeds/hound1/lol1236.jpg'},
+        {Key: 'breeds/hound1/lol1237.jpg'},
+        {Key: 'breeds/hound1/lol1238.jpg'},
+        {Key: 'breeds/hound1/lol1239.jpg'},
+      ]
+    }
+  );
+
+  env.S3_CLIENT = new S3Client({});
+
+  const res = await handleRequest(new Request("http://localhost/api/breeds/image/random/99999/alt"), env);
   const obj = JSON.parse(await res.text())
   const count = Object.keys(obj.message).length;
   expect(res.status).toBe(200);
   expect(obj.status).toBe('success');
-  expect(count).toBe(5);
+  expect(count).toBe(7);
   expect(obj.message[0].altText).toBe('Hound1 dog.');
   expect(obj.message[4].url).toContain('https://images.dog.ceo/breeds/hound1/lol123');
   expect(obj.message[3].url).toContain('.jpg');

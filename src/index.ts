@@ -100,6 +100,9 @@ export async function handleRequest(request: Request, env: Env) {
 				route: '/api/breed/:breed1/list/random',
 				handler: async(params: Params) => {
 					const breeds = await listRandomSubBreeds(env, params);
+					if (!breeds.length) {
+						return breedNotFound();
+					}
 					return responseString(breeds[0]);
 				},
 			},
@@ -136,6 +139,7 @@ export async function handleRequest(request: Request, env: Env) {
 			{
 				route: '/api/breed/:breed1/images/random',
 				handler: async (params: Params) => {
+					params.count = 1;
 					const images = await getBreedImagesRandom(env, params);
 					return responseString(images[0]);
 				},
