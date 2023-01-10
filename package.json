@@ -4,7 +4,6 @@
   "type": "module",
   "module": "./dist/index.mjs",
   "devDependencies": {
-    "@aws-sdk/lib-storage": "^3.245.0",
     "@cloudflare/workers-types": "^3.11.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^18.11.18",

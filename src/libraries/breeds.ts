@@ -25,11 +25,11 @@ export async function listAllBreeds(env: Env): Promise<Map<string, string[]>> {
     const breeds: Map<string, string[]> = new Map;
 
     for (const element of elements) {
-        const breedString = element.replace(prefix, '').replace(delimiter, '');
+        const breedString = element.replace(prefix, '').replace(/\/$/, '');
         const exploded = breedString.split("-");
         const breed = exploded[0];
 
-        if (!(breed in breeds)) {
+        if (!breeds.has(breed)) {
             breeds.set(breed, []);
         }
 
@@ -75,11 +75,11 @@ export async function listMainBreeds(env: Env): Promise<Map<string, string[]>> {
     const breeds: Map<string, string[]> = new Map;
 
     for (const element of elements) {
-        const breedString = element.replace(prefix, '').replace(delimiter, '');
+        const breedString = element.replace(prefix, '').replace(/\/$/, '');
         const exploded = breedString.split("-");
         const breed = exploded[0];
 
-        if (!(breed in breeds)) {
+        if (!breeds.has(breed)) {
             breeds.set(breed, []);
         }
     }
@@ -121,12 +121,12 @@ export async function listSubBreeds(env: Env, params: Params): Promise<Map<strin
     const subs: string[] = [];
 
     for (const element of elements) {
-        const breedString = element.replace(prefix, '').replace(delimiter, '');
+        const breedString = element.replace(prefix, '').replace(/\/$/, '');
         const exploded = breedString.split("-");
         const breed = exploded[0];
 
         if (breed1 === breed) {
-            if (!(breed in breeds)) {
+            if (!breeds.has(breed)) {
                 breeds.set(breed, []);
             }
 

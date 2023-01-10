@@ -50,7 +50,6 @@ export async function getCommonPrefixesByDelimeterAndPrefix(env: Env, delimeter:
 	const listed = await client.send(command);
 
 	if (listed && listed.CommonPrefixes) {
-		console.log(listed);
 		for (const element of listed.CommonPrefixes) {
 			if (element && element.Prefix) {
 				elements.push(element.Prefix);
