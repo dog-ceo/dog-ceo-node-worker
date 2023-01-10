@@ -1,5 +1,3 @@
-import { S3Client } from "@aws-sdk/client-s3";
-
 import { Env } from "./libraries/data"
 
 import { processRoutes, Route } from "./libraries/router"

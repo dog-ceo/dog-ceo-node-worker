@@ -1,5 +1,14 @@
 import { handleRequest } from "@/index";
-import AWSMock from "mock-aws-s3";
+import {ListObjectsV2Command, ListObjectsV2CommandOutput, S3Client, CommonPrefix} from '@aws-sdk/client-s3';
+import {sdkStreamMixin} from '@aws-sdk/util-stream-node';
+import {mockClient} from 'aws-sdk-client-mock';
+import {Readable} from 'stream';
+import {createReadStream} from 'fs';
+import {CreateMultipartUploadCommand, UploadPartCommand} from '@aws-sdk/client-s3';
+import { Upload } from "@aws-sdk/lib-storage";
+
+const s3Mock = mockClient(S3Client);
+s3Mock.on(ListObjectsV2Command).resolves({ CommonPrefixes: [{Prefix: 'breeds/hound/lol'}] as CommonPrefix[] });
 
 test("should send 404", async () => {
   const env = getMiniflareBindings();
@@ -11,19 +20,9 @@ test("should send 404", async () => {
 test("should get list of all breeds", async () => {
   const env = getMiniflareBindings();
 
-  AWSMock.config.basePath = './.tmp/buckets/' // Can configure a basePath for your local buckets
-  var s3 = new AWSMock.S3({
-    params: { Bucket: env.R2_BUCKET }
-  });
-
-  env.S3_CLIENT = s3;
-
-  s3.putObject({Key: 'breeds/hound/image1.jpg', Body: '12345', Bucket: env.R2_BUCKET}, function(err: any, data: any) {
-    s3.listObjects({Prefix: 'breeds/hound', Bucket: env.R2_BUCKET}, function (err: any, data: any) {
-      console.log(data);
-    });
-  });
+  env.S3_CLIENT = new S3Client({});
 
   const res = await handleRequest(new Request("http://localhost/api/breeds/list/all"), env);
-  expect(res.status).toBe(404);
+  expect(res.status).toBe(200);
+  expect(await res.text()).toContain("No matching route.");
 });
