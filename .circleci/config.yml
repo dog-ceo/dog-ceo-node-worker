@@ -1,0 +1,22 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5
+
+jobs:
+  test:
+    docker:
+      - image: cimg/node:16.16
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: "npm"
+      - run:
+          name: Run tests
+          command: npm run test
+      - run:
+          name: Codecov
+          command: |
+            curl -Os https://uploader.codecov.io/latest/linux/codecov
+            chmod +x codecov
+            ./codecov 
