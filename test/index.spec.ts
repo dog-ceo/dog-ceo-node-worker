@@ -209,3 +209,30 @@ test("api/breed/:breed1/list/random/3", async () => {
 
   expect(JSON.parse(await res.text())).toStrictEqual({status: 'success', message: ['lol1']});
 });
+
+// /api/breeds/image/random
+test("api/breeds/image/random", async () => {
+  const env = getMiniflareBindings();
+
+  const s3Mock = mockClient(S3Client);
+
+  s3Mock.on(ListObjectsV2Command).resolves(
+    { CommonPrefixes: 
+      [
+        {Prefix: 'breeds/hound1'},
+      ] as CommonPrefix[],
+      Contents:
+      [
+        {Key: 'breeds/hound1/lol123.jpg'}
+      ]
+    }
+  );
+
+  env.S3_CLIENT = new S3Client({});
+
+  const res = await handleRequest(new Request("http://localhost/api/breeds/image/random"), env);
+
+  expect(res.status).toBe(200);
+
+  expect(JSON.parse(await res.text())).toStrictEqual({status: 'success', message: 'https://images.dog.ceo/breeds/hound1/lol123.jpg'});
+});
