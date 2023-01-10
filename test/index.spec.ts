@@ -346,7 +346,7 @@ test("api/breeds/image/random/99999", async () => {
   const count = Object.keys(obj.message).length;
   expect(res.status).toBe(200);
   expect(obj.status).toBe('success');
-  expect(count).toBe(6);
+  expect(count).toBe(50);
   expect(obj.message[0]).toContain('hound1/lol123');
   expect(obj.message[4]).toContain('.jpg');
 });
@@ -406,7 +406,7 @@ test("api/breeds/image/random/99999/alt", async () => {
         {Key: 'breeds/hound1/lol1236.jpg'},
         {Key: 'breeds/hound1/lol1237.jpg'},
         {Key: 'breeds/hound1/lol1238.jpg'},
-        {Key: 'breeds/hound1/lol1239.jpg'},
+        {Key: 'breeds/hound1/lol123.jpg'},
       ]
     }
   );
@@ -418,7 +418,7 @@ test("api/breeds/image/random/99999/alt", async () => {
   const count = Object.keys(obj.message).length;
   expect(res.status).toBe(200);
   expect(obj.status).toBe('success');
-  expect(count).toBe(7);
+  expect(count).toBe(50);
   expect(obj.message[0].altText).toBe('Hound1 dog.');
   expect(obj.message[4].url).toContain('https://images.dog.ceo/breeds/hound1/lol123');
   expect(obj.message[3].url).toContain('.jpg');
