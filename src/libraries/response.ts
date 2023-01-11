@@ -17,7 +17,7 @@ export function responseTwoDimensional(data: { [k: string]: string[]; }): Respon
 
 export function responseTwoDimensionalNoCache(data: { [k: string]: string[]; }): Response {
 	const json = JSON.stringify({'status': 'success', 'message': data});
-	headers["cache-control"] = '';
+	headers["cache-control"] = 'no-store';
 	return new Response(json, {headers: headers})
 }
 
@@ -30,7 +30,7 @@ export function responseTwoDimensionalWithAlt(data: Alt[]): Response {
 
 export function responseTwoDimensionalWithAltNoCache(data: Alt[]): Response {
 	const json = JSON.stringify({'status': 'success', 'message': data});
-	headers["cache-control"] = '';
+	headers["cache-control"] = 'no-store';
 	return new Response(json, {headers: headers})
 }
 
@@ -41,7 +41,7 @@ export function responseOneDimensional(data: string[]): Response {
 
 export function responseOneDimensionalNoCache(data: string[]): Response {
 	const json = JSON.stringify({'status': 'success', 'message': data});
-	headers["cache-control"] = '';
+	headers["cache-control"] = 'no-store';
 	return new Response(json, {headers: headers})
 }
 
@@ -54,7 +54,7 @@ export function responseString(data: string): Response {
 
 export function responseStringNoCache(data: string): Response {
 	const json = JSON.stringify({'status': 'success', 'message': data});
-	headers["cache-control"] = '';
+	headers["cache-control"] = 'no-store';
 	return new Response(json, {headers: headers})
 }
 
