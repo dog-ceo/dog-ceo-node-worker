@@ -10,11 +10,13 @@ command = "node build.js"
 kv_persist = true
 cache_persist = true
 
+# wrangler kv:namespace create DOGSTUFF
+
 kv_namespaces = [
-  { binding = "DOGSTUFF", id = "3451ecb077864e0dbd70f4e44566f4f3", preview_id = "bf9ab5a9680a46cb9daebf0bd50ab454" }
+  { binding = "DOGSTUFF", id = "72a6b702f86f456ebed626ee126f13f3", preview_id = "bf9ab5a9680a46cb9daebf0bd50ab454" }
 ]
 
 [env.production]
 kv_namespaces = [
-  { binding = "DOGSTUFF", id = "3451ecb077864e0dbd70f4e44566f4f3" }
+  { binding = "DOGSTUFF", id = "72a6b702f86f456ebed626ee126f13f3" }
 ]
