@@ -113,6 +113,6 @@ async function getDataFromCache(env: Env, key: string): Promise<string> {
 async function saveDataToCache(env: Env, key: string, data: any) {
 	const cacheKey = 'dog-' + key;
 	const cacheDataKey = cacheKey + '-data';
-	// Cache for an hour
-	await env.DOGSTUFF.put(cacheDataKey, data, {expirationTtl: 3600});
+	// Cache for 6 hours
+	await env.DOGSTUFF.put(cacheDataKey, data, {expirationTtl: 21600});
 }

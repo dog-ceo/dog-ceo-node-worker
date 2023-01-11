@@ -6,8 +6,8 @@ export interface Alt {
 let headers = {
 	'content-type': 'application/json;charset=UTF-8',
 	'access-control-allow-origin': '*',
-	// Cache for 1 hour
-	'cache-control': 's-maxage=3600, max-age=3600',
+	// Cache for 6 hours
+	'cache-control': 's-maxage=21600, max-age=21600',
 }
 
 export function responseTwoDimensional(data: { [k: string]: string[]; }): Response {
